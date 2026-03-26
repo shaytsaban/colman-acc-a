@@ -1,1 +1,506 @@
 
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>החלטת אכיפה 24-7: סיווג נדל"ן ו-IAS 40</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Heebo', 'sans-serif'],
+                    },
+                    colors: {
+                        isa: {
+                            blue: '#1e3a8a',
+                            light: '#eff6ff',
+                            accent: '#3b82f6',
+                            dark: '#0f172a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Heebo', sans-serif; scroll-behavior: smooth; }
+        
+        /* Interactive Animations */
+        .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.15); }
+        
+        .fade-in { animation: fadeIn 0.6s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Flowchart Styles */
+        .arrow-down {
+            width: 2px;
+            height: 40px;
+            background-color: #cbd5e1;
+            margin: 0 auto;
+            position: relative;
+        }
+        .arrow-down::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: -5px;
+            border-width: 6px 6px 0;
+            border-style: solid;
+            border-color: #cbd5e1 transparent transparent;
+        }
+
+        /* Accordion transition */
+        .accordion-content {
+            transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out, padding 0.4s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .accordion-content.expanded {
+            max-height: 1000px; /* arbitrary large number */
+            opacity: 1;
+        }
+
+        /* Highlight text effect */
+        .highlight-text {
+            background: linear-gradient(120deg, rgba(253, 224, 71, 0.5) 0%, rgba(253, 224, 71, 0.5) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 30%;
+            background-position: 0 88%;
+            transition: background-size 0.25s ease-in;
+        }
+        .highlight-text:hover {
+            background-size: 100% 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased selection:bg-blue-200 selection:text-blue-900">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-br from-isa-dark to-isa-blue text-white py-16 px-4 shadow-xl relative overflow-hidden">
+        <div class="absolute opacity-10 right-[-10%] top-[-20%] text-[20rem]">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <div class="inline-block bg-white/20 text-white text-sm font-semibold px-5 py-2 rounded-full mb-6 backdrop-blur-md border border-white/30">
+                <i class="fas fa-graduation-cap mr-2 ml-2"></i> סביבת למידה אינטראקטיבית • רשות ניירות ערך
+            </div>
+            <h1 class="text-4xl md:text-6xl font-black mb-6 tracking-tight leading-tight">החלטת אכיפה 24-7</h1>
+            <h2 class="text-2xl md:text-3xl font-light opacity-90 text-blue-100">
+                המדריך המלא: שינוי סיווג דירות מגורים מנדל"ן להשקעה למלאי
+            </h2>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-12 space-y-16">
+
+        <!-- Section 1: Theoretical Background (Definitions) -->
+        <section class="fade-in">
+            <div class="flex items-center gap-3 mb-8 border-b-2 border-gray-200 pb-4">
+                <div class="bg-isa-blue text-white w-10 h-10 rounded-lg flex items-center justify-center text-xl">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3 class="text-3xl font-bold text-gray-900">רקע תיאורטי: הגדרות יסוד בתקינה</h3>
+            </div>
+            
+            <p class="text-lg text-gray-600 mb-6">
+                לפני שניגש למקרה עצמו, עלינו להבין את ההגדרות הבסיסיות כפי שהן מופיעות בתקני הדיווח הכספי הבינלאומי (IFRS). לחצו על המושגים כדי להרחיב:
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- IAS 40 Definition -->
+                <div class="bg-white rounded-xl shadow-sm border border-blue-100 overflow-hidden hover-lift cursor-pointer" onclick="toggleAccordion('acc-ias40')">
+                    <div class="bg-blue-50 p-5 flex justify-between items-center">
+                        <h4 class="text-xl font-bold text-blue-900"><i class="fas fa-building mr-2 ml-2"></i> נדל"ן להשקעה (IAS 40)</h4>
+                        <i class="fas fa-chevron-down text-blue-400 transition-transform duration-300" id="icon-ias40"></i>
+                    </div>
+                    <div id="acc-ias40" class="accordion-content bg-white px-5 pb-5">
+                        <div class="pt-4 border-t border-blue-50 mt-2">
+                            <p class="text-gray-700 font-medium mb-2">סעיף 5 לתקן קובע:</p>
+                            <blockquote class="border-r-4 border-blue-400 pr-4 text-gray-600 italic">
+                                "נדל"ן (מקרקעין או מבנה... או שניהם) המוחזק... כדי להפיק דמי שכירות או לשם עליית ערך הונית או שניהם, במקום לשם: (א) שימוש בייצור... או (ב) מכירה במהלך העסקים הרגיל."
+                            </blockquote>
+                            <p class="text-sm text-gray-500 mt-3"><i class="fas fa-info-circle ml-1"></i> בד"כ נמדד לפי שווי הוגן. כל שינוי בערך מוכר מיד ברווח והפסד כ'התאמות שווי הוגן'.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IAS 2 Definition -->
+                <div class="bg-white rounded-xl shadow-sm border border-emerald-100 overflow-hidden hover-lift cursor-pointer" onclick="toggleAccordion('acc-ias2')">
+                    <div class="bg-emerald-50 p-5 flex justify-between items-center">
+                        <h4 class="text-xl font-bold text-emerald-900"><i class="fas fa-boxes mr-2 ml-2"></i> מלאי (IAS 2)</h4>
+                        <i class="fas fa-chevron-down text-emerald-400 transition-transform duration-300" id="icon-ias2"></i>
+                    </div>
+                    <div id="acc-ias2" class="accordion-content bg-white px-5 pb-5">
+                        <div class="pt-4 border-t border-emerald-50 mt-2">
+                            <p class="text-gray-700 font-medium mb-2">סעיף 6 לתקן קובע:</p>
+                            <blockquote class="border-r-4 border-emerald-400 pr-4 text-gray-600 italic">
+                                "מלאי הם נכסים: (א) המוחזקים למכירה במהלך העסקים הרגיל; (ב) בתהליך ייצור לשם מכירה כאמור; או (ג) בצורת חומרים או אספקה המיועדים לצריכה בתהליך הייצור..."
+                            </blockquote>
+                            <p class="text-sm text-gray-500 mt-3"><i class="fas fa-info-circle ml-1"></i> נמדד לפי הנמוך מבין עלות לבין שווי מימוש נטו (NRV). רווח מוכר רק בעת המכירה בפועל ללקוח.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Case Study -->
+        <section class="fade-in">
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden relative">
+                <div class="absolute top-0 right-0 w-2 h-full bg-isa-accent"></div>
+                <div class="p-8 md:p-10">
+                    <h3 class="text-2xl font-bold text-isa-blue mb-6">
+                        <i class="fas fa-file-contract text-isa-accent ml-2"></i> תיאור מקרה המבחן (Case Study)
+                    </h3>
+                    
+                    <div class="space-y-4 text-lg text-gray-700">
+                        <p>
+                            חברת נדל"ן ישראלית רוכשת מקבצי דיור למגורים (במסגרת החוק לעידוד השקעות הון) ומייעדת אותם במקור להשכרה ארוכת טווח. כפועל יוצא מכך, <strong>החברה סיווגה את הדירות כנדל"ן להשקעה</strong>.
+                        </p>
+                        <p>
+                            במהלך שנת 2023, החליטה הנהלת החברה לשנות כיוון: <span class="highlight-text">היא מעוניינת למכור חלק מהדירות המושכרות בשוק החופשי.</span>
+                        </p>
+                        <p>
+                            כדי לממש את ההחלטה, החברה החלה לבצע פעולות נמרצות:
+                        </p>
+                        <ul class="list-none space-y-2 mt-4 mb-6 bg-gray-50 p-6 rounded-xl border border-gray-100">
+                            <li><i class="fas fa-check text-green-500 ml-2"></i> פנייה לרשויות המס (מע"מ ומיסוי מקרקעין) לתיקון שומות והחזרי מס.</li>
+                            <li><i class="fas fa-check text-green-500 ml-2"></i> קבלת ייעוץ משפטי ייעודי לתהליך שינוי הייעוד.</li>
+                            <li><i class="fas fa-check text-green-500 ml-2"></i> התקשרות עם משווקים והתחלת קמפיין פרסום לדירות.</li>
+                            <li><i class="fas fa-check text-green-500 ml-2"></i> קבלת אישור מהיזם המקורי להתחלת השיווק.</li>
+                        </ul>
+                        <p class="font-bold text-isa-blue bg-blue-50 p-4 rounded-lg">
+                            בעקבות פעולות אלו, החברה קבעה כי החל תהליך המכירה, ולכן ביצעה שינוי סיווג בדוחותיה הכספיים מ"נדל"ן להשקעה" ל"מלאי".
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Pause for thought (Interactive) -->
+        <section class="fade-in relative z-20">
+            <div class="bg-gradient-to-r from-indigo-900 to-isa-dark rounded-2xl p-1 shadow-xl transform rotate-1 hover:rotate-0 transition-transform duration-300">
+                <div class="bg-white rounded-xl p-8 transform -rotate-1 hover:rotate-0 transition-transform duration-300">
+                    <div class="text-center mb-6">
+                        <div class="inline-block bg-amber-100 text-amber-600 p-4 rounded-full mb-4 shadow-inner">
+                            <i class="fas fa-brain text-4xl"></i>
+                        </div>
+                        <h3 class="text-3xl font-black text-gray-900">רגע למחשבה...</h3>
+                        <p class="text-gray-600 mt-2 text-lg">מה אתם הייתם מחליטים כרואי החשבון המבקרים של החברה?</p>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 mb-6 text-center text-lg text-gray-700">
+                        החברה טוענת: "הסרנו חסמים משפטיים ומיסויים ושכרנו משווקים. הדירות כעת 'בפיתוח משפטי/שיווקי' לקראת מכירה". האם פעולות אלו מספיקות כדי לשנות סיווג למלאי לפי התקינה?
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button onclick="revealAnswer('wrong')" class="flex-1 border-2 border-emerald-500 text-emerald-700 bg-white hover:bg-emerald-50 font-bold py-4 px-6 rounded-xl transition-colors">
+                            <i class="fas fa-thumbs-up ml-2"></i> כן, הסיווג למלאי תקין ומוצדק
+                        </button>
+                        <button onclick="revealAnswer('correct')" class="flex-1 border-2 border-rose-500 text-rose-700 bg-white hover:bg-rose-50 font-bold py-4 px-6 rounded-xl transition-colors">
+                            <i class="fas fa-times-circle ml-2"></i> לא, הטיפול החשבונאי שגוי
+                        </button>
+                    </div>
+
+                    <!-- Hidden Answer Reveal -->
+                    <div id="answer-reveal" class="hidden mt-8 pt-6 border-t border-gray-200">
+                        <div id="answer-content" class="p-6 rounded-xl text-center">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Deep Dive IAS 40 (Dynamic texts) -->
+        <section id="deep-dive" class="fade-in pt-8">
+            <h3 class="text-3xl font-bold text-gray-900 mb-8 text-center">הכרעת רשות ניירות ערך: צלילת עומק לתקן IAS 40</h3>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Card 1: Paragraph 57 -->
+                <div class="bg-white rounded-2xl shadow-sm p-8 border border-gray-200 hover:border-blue-400 transition-colors duration-300 relative group">
+                    <div class="absolute -top-6 -right-4 w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl rotate-12 flex items-center justify-center text-2xl font-black shadow-sm group-hover:rotate-0 transition-transform duration-300">57</div>
+                    <h4 class="text-xl font-bold mb-4 mt-2">הצורך ב"ראיה" לשינוי בשימוש</h4>
+                    <p class="text-gray-600 mb-4 text-justify">
+                        התקן מתנה כל שינוי סיווג (העברה) בכך שיתקיים אירוע המהווה <strong>ראיה אובייקטיבית לשינוי בשימוש</strong>.
+                    </p>
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mt-4 text-blue-900 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 bottom-0 w-1 bg-blue-500"></div>
+                        <p class="font-semibold text-center mb-2 underline decoration-blue-300 decoration-2 underline-offset-4">"שינוי בתוכניות ההנהלה... אינו מספק ראיה"</p>
+                        <p class="text-sm">כוונת ההנהלה למכור אינה מספיקה. כדי להעביר נכס למלאי, התקן דורש במפורש בסעיף 57(ב): <br><br><strong>"תחילת פיתוח מתוך כוונה למכור את הנדל"ן".</strong></p>
+                    </div>
+                </div>
+
+                <!-- Card 2: Paragraph 58 -->
+                <div class="bg-white rounded-2xl shadow-sm p-8 border border-gray-200 hover:border-red-400 transition-colors duration-300 relative group">
+                    <div class="absolute -top-6 -right-4 w-16 h-16 bg-red-100 text-red-600 rounded-2xl rotate-12 flex items-center justify-center text-2xl font-black shadow-sm group-hover:rotate-0 transition-transform duration-300">58</div>
+                    <h4 class="text-xl font-bold mb-4 mt-2">הכלל לגבי מימוש ללא פיתוח</h4>
+                    <p class="text-gray-600 mb-4 text-justify">
+                        סעיף 58 הוא סעיף "סוגר" המטפל בדיוק במקרה בו ישות מחליטה למכור נכס מניב כפי שהוא (AS-IS).
+                    </p>
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100 mt-4 text-red-900 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 bottom-0 w-1 bg-red-500"></div>
+                        <p class="text-sm italic mb-2">"כאשר ישות מחליטה על מימוש נדל"ן להשקעה <strong>ללא פיתוח</strong>, הישות ממשיכה לטפל בנדל"ן כנדל"ן להשקעה <strong>עד לגריעתו</strong>..."</p>
+                        <p class="text-sm font-bold mt-3 text-red-700">
+                            <i class="fas fa-gavel ml-1"></i> עמדת סגל הרשות: <br>
+                            פעולות שיווקיות ומשפטיות (הסרת חסמים) אינן משנות את הדירה הפיזית. מכיוון שאין "פיתוח" בנכס עצמו, לא ניתן לסווג למלאי!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Interactive Flowchart -->
+        <section class="fade-in mt-16 bg-white rounded-3xl shadow-xl p-8 border border-gray-100 relative pt-12">
+            <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-isa-blue via-isa-accent to-emerald-400 rounded-t-3xl"></div>
+            <div class="text-center mb-10">
+                <h3 class="text-3xl font-black text-gray-900 mb-2">תרשים הזרימה של התקינה</h3>
+                <p class="text-gray-500 bg-gray-100 inline-block px-4 py-1 rounded-full text-sm font-medium">
+                    <i class="fas fa-hand-pointer ml-1 animate-pulse text-isa-accent"></i> לחץ על השלבים בתרשים כדי להבין את מנגנון ההחלטה
+                </p>
+            </div>
+
+            <div class="flex flex-col items-center max-w-2xl mx-auto">
+                <!-- Step 1 -->
+                <button onclick="updateFlowchartInfo('start')" class="w-full max-w-sm bg-gray-800 text-white py-4 px-6 rounded-2xl font-bold shadow-lg hover:bg-gray-700 hover:scale-105 transition-all focus:ring-4 focus:ring-gray-300">
+                    <i class="fas fa-building mr-2 ml-2"></i> 1. החזקה בנדל"ן להשקעה
+                </button>
+                
+                <div class="arrow-down"></div>
+                
+                <!-- Step 2 -->
+                <button onclick="updateFlowchartInfo('intent')" class="w-full max-w-sm bg-isa-blue text-white py-4 px-6 rounded-2xl font-bold shadow-lg hover:bg-blue-800 hover:scale-105 transition-all focus:ring-4 focus:ring-blue-300">
+                    <i class="fas fa-bullhorn mr-2 ml-2"></i> 2. החלטה אסטרטגית למכור
+                </button>
+
+                <div class="arrow-down"></div>
+
+                <!-- Step 3 (Decision) -->
+                <button onclick="updateFlowchartInfo('decision')" class="w-full max-w-md bg-amber-400 text-gray-900 py-4 px-6 rounded-full font-black shadow-lg hover:bg-amber-500 hover:scale-105 transition-all focus:ring-4 focus:ring-amber-200 border-4 border-white outline outline-2 outline-amber-200">
+                    <i class="fas fa-question-circle text-xl mr-2 ml-2"></i> 3. האם מתבצעות "פעולות פיתוח" בנכס?
+                </button>
+
+                <!-- Split paths -->
+                <div class="w-full mt-6 relative">
+                    <div class="absolute top-0 left-1/2 w-1/2 h-0.5 bg-gray-300"></div>
+                    <div class="absolute top-0 right-1/2 w-1/2 h-0.5 bg-gray-300"></div>
+                    
+                    <div class="flex justify-between w-full max-w-lg mx-auto px-4 mt-0.5">
+                        <!-- Yes Path -->
+                        <div class="w-1/2 flex flex-col items-center relative">
+                            <div class="w-0.5 h-8 bg-gray-300"></div>
+                            <span class="bg-white px-3 py-1 rounded-full text-emerald-600 font-bold mb-3 shadow-sm border border-emerald-100 absolute top-4 z-10">כן (שינוי פיזי)</span>
+                            <div class="w-0.5 h-6 bg-gray-300 mt-6"></div>
+                            <button onclick="updateFlowchartInfo('yes')" class="mt-2 w-40 bg-emerald-50 text-emerald-800 border-2 border-emerald-400 py-3 rounded-xl font-bold shadow-md hover:bg-emerald-100 hover:scale-105 transition-all">
+                                <i class="fas fa-exchange-alt mb-1 block text-lg"></i>
+                                סיווג למלאי<br><span class="text-xs font-normal opacity-70">תקן IAS 2</span>
+                            </button>
+                        </div>
+                        
+                        <!-- No Path -->
+                        <div class="w-1/2 flex flex-col items-center relative">
+                            <div class="w-0.5 h-8 bg-gray-300"></div>
+                            <span class="bg-white px-3 py-1 rounded-full text-rose-600 font-bold mb-3 shadow-sm border border-rose-100 absolute top-4 z-10">לא (פעולות מנהלתיות)</span>
+                            <div class="w-0.5 h-6 bg-gray-300 mt-6"></div>
+                            <button onclick="updateFlowchartInfo('no')" class="mt-2 w-48 bg-rose-50 text-rose-900 border-2 border-rose-400 py-3 rounded-xl font-bold shadow-md hover:bg-rose-100 hover:scale-105 transition-all">
+                                <i class="fas fa-lock mb-1 block text-lg"></i>
+                                נשאר נדל"ן להשקעה<br><span class="text-xs font-normal opacity-70">תקן IAS 40 (החלטת הרשות)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flowchart Dynamic Info Panel -->
+            <div id="flowchart-info" class="mt-12 bg-gray-50 p-8 rounded-2xl border-2 border-dashed border-gray-300 min-h-[180px] flex flex-col justify-center items-center text-center transition-all duration-300">
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4">
+                    <i class="fas fa-mouse-pointer text-2xl text-gray-400 animate-bounce"></i>
+                </div>
+                <h4 class="text-xl font-bold text-gray-600 mb-2">לוח מידע דינמי</h4>
+                <p class="text-gray-500">לחץ על אחד הכפתורים בתרשים כדי להציג את ההסבר החשבונאי המלא.</p>
+            </div>
+        </section>
+
+        <!-- Section 6: Pedagogical Summary (What we learnt) -->
+        <section class="fade-in mb-12">
+            <h3 class="text-3xl font-bold text-gray-900 mb-8 text-center"><i class="fas fa-graduation-cap text-isa-blue ml-2"></i> מה למדנו? תובנות פדגוגיות</h3>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center hover-lift">
+                    <div class="w-16 h-16 rounded-full bg-blue-50 text-isa-blue flex items-center justify-center text-2xl mb-4">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">מהות על פני צורה</h4>
+                    <p class="text-gray-600 text-sm">התקינה החשבונאית (IFRS) אינה מסתפקת בהצהרות כוונות או בפעולות נייר. נדרשת עדות כלכלית ופיזית לשינוי המהותי בייעוד הנכס.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center hover-lift">
+                    <div class="w-16 h-16 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center text-2xl mb-4">
+                        <i class="fas fa-hard-hat"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">הגדרת "פיתוח"</h4>
+                    <p class="text-gray-600 text-sm">פעולות "רכות" כגון שיווק, פרסום, ייעוץ משפטי ותיקוני מס אינן נחשבות לפיתוח. פיתוח דורש שינוי במצבו הפיזי של הנכס המכשיר אותו למכירה (למשל, שיפוץ מקיף).</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center hover-lift">
+                    <div class="w-16 h-16 rounded-full bg-red-50 text-red-500 flex items-center justify-center text-2xl mb-4">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">רלוונטיות למשקיע</h4>
+                    <p class="text-gray-600 text-sm">סיווג למלאי מנפח את ההון החוזר (נכסים שוטפים) ועלול ליצור מצג שווא של פעילות ייצור קבלנית בניגוד לפעילות מניבה הונית. רשות ני"ע מקפידה על שקיפות זו.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-isa-dark text-gray-400 py-10 text-center mt-12 border-t-4 border-isa-blue">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="flex justify-center mb-6">
+                <i class="fas fa-balance-scale text-3xl text-gray-600"></i>
+            </div>
+            <h5 class="text-white font-bold text-lg mb-2">החלטת אכיפה חשבונאית 24-7 • מחלקת תאגידים</h5>
+            <p class="mb-4 text-sm max-w-2xl mx-auto leading-relaxed">
+                המסמך נכתב על בסיס החלטת הרשות מספטמבר 2024. מטרתו פדגוגית והוא נועד להסביר בצורה אינטראקטיבית ופשוטה את הלוגיקה והיישום של תקן דיווח כספי בינלאומי IAS 40 (נדל"ן להשקעה) אל מול IAS 2 (מלאי).
+            </p>
+            <p class="text-xs text-gray-500">© פותח כסביבת למידה. אין לראות במסמך זה תחליף לייעוץ חשבונאי או משפטי מקצועי.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Accordion Logic
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const iconId = id === 'acc-ias40' ? 'icon-ias40' : 'icon-ias2';
+            const icon = document.getElementById(iconId);
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('expanded');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Pause for thought logic
+        function revealAnswer(type) {
+            const revealSection = document.getElementById('answer-reveal');
+            const contentArea = document.getElementById('answer-content');
+            
+            revealSection.classList.remove('hidden');
+            revealSection.classList.add('fade-in');
+            
+            if(type === 'wrong') {
+                contentArea.className = 'p-6 rounded-xl text-center bg-red-50 border-2 border-red-200';
+                contentArea.innerHTML = `
+                    <div class="w-16 h-16 mx-auto bg-red-100 text-red-600 rounded-full flex items-center justify-center text-3xl mb-4">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold text-red-800 mb-2">תשובה שגויה (אך נפוצה!)</h4>
+                    <p class="text-red-700 text-lg">
+                        החברה אכן טענה זאת, אך <strong>סגל רשות ניירות ערך דחה את העמדה</strong>. הרשות הבהירה כי פעולות להסרת חסמים משפטיים ומיסויים <strong>אינן משנות את הנכס עצמו</strong> ולכן אינן נחשבות ל"פיתוח" תחת התקינה החשבונאית.
+                    </p>
+                    <button onclick="document.getElementById('deep-dive').scrollIntoView({behavior: 'smooth'})" class="mt-4 bg-red-600 text-white px-6 py-2 rounded-full font-bold hover:bg-red-700 transition-colors">המשך לקרוא את הכרעת הרשות <i class="fas fa-arrow-down ml-1"></i></button>
+                `;
+            } else {
+                contentArea.className = 'p-6 rounded-xl text-center bg-emerald-50 border-2 border-emerald-200';
+                contentArea.innerHTML = `
+                    <div class="w-16 h-16 mx-auto bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mb-4">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold text-emerald-800 mb-2">תשובה נכונה ומדויקת!</h4>
+                    <p class="text-emerald-700 text-lg">
+                        זיהית נכון את הפער! כוונת ההנהלה והסרת חסמים ביורוקרטיים אינם מספיקים. סגל הרשות קבע באופן חד משמעי: אם לא בוצעו בנכס פעולות פיתוח <strong>המשנות אותו פיזית</strong> (כדרישת סעיף 58), הדירות חייבות להישאר מסווגות כנדל"ן להשקעה.
+                    </p>
+                    <button onclick="document.getElementById('deep-dive').scrollIntoView({behavior: 'smooth'})" class="mt-4 bg-emerald-600 text-white px-6 py-2 rounded-full font-bold hover:bg-emerald-700 transition-colors">בואו נצלול לסעיפי התקן <i class="fas fa-arrow-down ml-1"></i></button>
+                `;
+            }
+        }
+
+        // Flowchart Logic
+        const flowData = {
+            'start': {
+                icon: '<i class="fas fa-building text-4xl text-gray-800 mb-4"></i>',
+                title: 'תחילת התהליך: החזקה בנדל"ן להשקעה',
+                text: 'החברה מחזיקה מקבצי דיור להשכרה. הם מוכרים כנדל"ן להשקעה (IAS 40) ונמדדים במודל השווי ההוגן. שינויי ערך נזקפים לדוח רווח והפסד.',
+                bgColor: 'bg-gray-50',
+                borderColor: 'border-gray-800',
+                textColor: 'text-gray-900'
+            },
+            'intent': {
+                icon: '<i class="fas fa-bullhorn text-4xl text-isa-blue mb-4"></i>',
+                title: 'שלב ההחלטה (כוונת הנהלה)',
+                text: 'הדירקטוריון מחליט: "אנו מעוניינים למכור את הדירות".<br><br><span class="bg-blue-100 text-blue-900 px-2 py-1 rounded text-sm font-bold">כלל ברזל בתקינה:</span> כוונת הנהלה, רצינית ככל שתהיה (כולל התקשרות עם מתווכים), <span class="underline decoration-2">אינה מספיקה</span> בפני עצמה לשינוי סיווג למלאי. נדרש אירוע המשנה את השימוש בנכס.',
+                bgColor: 'bg-blue-50',
+                borderColor: 'border-isa-blue',
+                textColor: 'text-blue-900'
+            },
+            'decision': {
+                icon: '<i class="fas fa-hammer text-4xl text-amber-500 mb-4"></i>',
+                title: 'נקודת ההכרעה: מבחן הפיתוח',
+                text: 'השאלה המרכזית (סעיף 57ב ל-IAS 40): האם החברה החלה בפעולות <strong>פיתוח</strong> המעידות על שינוי בשימוש מתוך כוונה למכור? פיתוח משמעו שינוי פיזי בנכס, לא רק הסרת חסמים מנהלתיים.',
+                bgColor: 'bg-amber-50',
+                borderColor: 'border-amber-400',
+                textColor: 'text-amber-900'
+            },
+            'yes': {
+                icon: '<i class="fas fa-exchange-alt text-4xl text-emerald-500 mb-4"></i>',
+                title: 'העברה למלאי (IAS 2) - מתי זה קורה?',
+                text: 'היה והחברה הייתה מתחילה, למשל, לפצל דירות, לבצע עבודות תשתית מסיביות, או שיפוץ עמוק המשנה את הדירה לקראת מכירתה – זה היה נחשב כ"פיתוח". במצב זה הדירה הייתה מסווגת מחדש למלאי לפי השווי ההוגן במועד שינוי השימוש.',
+                bgColor: 'bg-emerald-50',
+                borderColor: 'border-emerald-400',
+                textColor: 'text-emerald-900'
+            },
+            'no': {
+                icon: '<i class="fas fa-gavel text-4xl text-rose-600 mb-4"></i>',
+                title: 'החלטת הרשות: אין שינוי סיווג!',
+                text: 'במקרה שלנו, הפעולות היו שיווקיות ומשפטיות בלבד. סעיף 58 קובע: החלטה על מכירה של נכס <strong>ללא פיתוח (AS-IS)</strong> משאירה אותו כנדל"ן להשקעה במאזן, עד למועד שבו יימכר בפועל וייגרע מן הספרים. החברה נאלצה לבצע תיקון טעות רטרואקטיבי בדוחותיה!',
+                bgColor: 'bg-rose-50',
+                borderColor: 'border-rose-400',
+                textColor: 'text-rose-900'
+            }
+        };
+
+        function updateFlowchartInfo(step) {
+            const panel = document.getElementById('flowchart-info');
+            const data = flowData[step];
+            
+            // Remove animation to reset it
+            panel.classList.remove('fade-in');
+            
+            // Apply new classes
+            panel.className = `mt-12 p-8 rounded-2xl border-2 shadow-lg flex flex-col justify-center text-center transition-colors duration-300 ${data.bgColor} ${data.borderColor}`;
+            
+            // Inject content
+            panel.innerHTML = `
+                ${data.icon}
+                <h4 class="text-2xl font-black ${data.textColor} mb-3">${data.title}</h4>
+                <p class="${data.textColor} text-lg max-w-2xl leading-relaxed mx-auto">${data.text}</p>
+            `;
+            
+            // Trigger reflow & animate
+            void panel.offsetWidth;
+            panel.classList.add('fade-in');
+            
+            // Scroll to view slightly
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    </script>
+</body>
+</html>
