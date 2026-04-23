@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>קורס מקיף ואינטראקטיבי - מענקים ממשלתיים (IAS 20)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Heebo', 'sans-serif'] },
+                    colors: {
+                        primary: '#1e40af', 
+                        secondary: '#0284c7', 
+                        accent: '#059669', 
+                        warning: '#e11d48', 
+                        dark: '#0f172a',
+                        lightbg: '#f8fafc',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Typography and Layout Settings */
+        body { background-color: #f1f5f9; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
+        
+        /* Journal Entries Styling */
+        .je-container { background: #fff; border: 2px solid #e2e8f0; border-radius: 0.75rem; padding: 1rem; margin-top: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .je-table { width: 100%; border-collapse: collapse; direction: rtl; font-family: 'Courier New', monospace; }
+        .je-row { border-bottom: 1px dashed #cbd5e1; }
+        .je-row:last-child { border-bottom: none; }
+        .je-cell { padding: 0.5rem 0; font-size: 1rem; }
+        .je-dr { color: #1d4ed8; font-weight: bold; } 
+        .je-cr { color: #be123c; font-weight: bold; padding-right: 2rem; } 
+        .je-amount { text-align: left; font-weight: bold; color: #334155; }
+        
+        /* Interactive Cards */
+        .glass-card { background: rgba(255, 255, 255, 0.98); border: 1px solid rgba(226, 232, 240, 0.8); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); border-radius: 1.5rem; }
+        .mini-exercise { border-right: 4px solid #0284c7; background: #f0f9ff; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; }
+        .example-box { background: #fafafa; border: 1px solid #e5e5e5; border-right: 4px solid #1e40af; border-radius: 0.5rem; padding: 1.5rem; margin-top: 1rem; }
+        
+        /* Explain Drawers & Hidden Content */
+        .explain-content { display: grid; grid-template-rows: 0fr; transition: all 0.4s ease-out; opacity: 0; }
+        .explain-content.open { grid-template-rows: 1fr; opacity: 1; margin-top: 1rem; }
+        .explain-inner { overflow: hidden; }
+        .content-hidden { display: none; opacity: 0; transition: opacity 0.5s; }
+        .content-visible { display: block; opacity: 1; animation: fadeIn 0.5s forwards; }
+        
+        /* Validation Animations */
+        .input-error { border-color: #e11d48 !important; animation: shake 0.4s; background-color: #fff1f2 !important; }
+        .input-success { border-color: #059669 !important; background-color: #ecfdf5 !important; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        
+        /* Exercise Steps */
+        .step-hidden { display: none; opacity: 0; transform: translateY(20px); }
+        .step-visible { display: block; animation: slideUp 0.6s forwards; }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        .hint-box { display: none; background: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 0.75rem; border-radius: 0.5rem; margin-top: 0.5rem; font-size: 0.9rem; font-weight: bold; }
+        
+        .show-btn { background: #e2e8f0; color: #334155; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: bold; display: inline-flex; align-items: center; gap: 0.5rem; transition: background 0.2s; border: 1px solid #cbd5e1; }
+        .show-btn:hover { background: #cbd5e1; }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-dark text-white py-16 px-6 shadow-2xl mb-12 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')]"></div>
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-4">המדריך השלם - <span class="text-secondary">IAS 20</span></h1>
+            <p class="text-xl md:text-2xl font-light text-slate-300">מענקים ממשלתיים: מתיאוריה, דרך דוגמאות מפורטות, ועד לפרקטיקה.</p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-16">
+
+        <!-- Chapter 1: Recognition -->
+        <section class="glass-card p-8 border-t-8 border-t-primary">
+            <h2 class="text-3xl font-bold text-primary mb-4 flex items-center gap-3">
+                <i data-lucide="target" class="w-8 h-8"></i> פרק 1: התנאים להכרה
+            </h2>
+            <p class="text-lg text-slate-700 mb-4">הממשלה לא מחלקת כסף בחינם. מענק יוכר רק כאשר מתקיימים <strong>שני תנאים מצטברים</strong>:</p>
+            <ul class="list-none space-y-3 mb-6 ml-4">
+                <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="text-accent w-5 h-5"></i> <strong>ביטחון סביר לציות:</strong> החברה אכן תעמוד בתנאים שנקבעו.</li>
+                <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="text-accent w-5 h-5"></i> <strong>ביטחון סביר לקבלה:</strong> הכסף אכן יתקבל בפועל.</li>
+            </ul>
+
+            <button onclick="toggleExplain('exp-chap1')" class="text-primary text-sm font-bold flex items-center gap-1 hover:underline mb-4">
+                <i data-lucide="help-circle" class="w-4 h-4"></i> הסבר לי יותר: למה דורשים ביטחון סביר ולא ודאות מוחלטת?
+            </button>
+            <div id="exp-chap1" class="explain-content mb-4">
+                <div class="explain-inner bg-blue-50 p-4 rounded-lg border border-blue-200 text-sm">
+                    <strong>הרציונל החשבונאי:</strong> החשבונאות פועלת תחת הנחת ה"עסק החי" ומאזנת בין שמרנות לרלוונטיות. אי אפשר לחכות 10 שנים עד שנוודא בודאות מוחלטת שעמדנו בכל תנאי המענק (למשל הפעלת המפעל לעשור שלם), כי אז הדוחות של היום לא ישקפו את המציאות הכלכלית ואת ההטבה שהחברה קיבלה. לכן התקן דורש "ביטחון סביר" - הערכה כנה ומבוססת של הנהלת החברה שאכן תעמוד בתנאים.
+                </div>
+            </div>
+
+            <div class="mini-exercise">
+                <h4 class="font-bold text-secondary flex items-center gap-2 mb-2"><i data-lucide="mouse-pointer-click"></i> מיני-התנסות: שאלת הבנה</h4>
+                <p class="text-sm mb-3">חברה קיבלה 100,000 ש"ח לחשבון הבנק עבור בניית מפעל בעתיד. להנהלה <strong>אין</strong> עדיין ביטחון סביר שהמפעל אכן ייבנה. קחו רגע לחשוב, מה תהיה פקודת היומן בעת קבלת המזומן?</p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="checkMini1(false)" class="bg-white border border-slate-300 px-4 py-2 rounded hover:bg-slate-50 transition">ח' מזומן / ז' הכנסה ממענק</button>
+                    <button onclick="checkMini1(true)" class="bg-white border border-slate-300 px-4 py-2 rounded hover:bg-slate-50 transition">ח' מזומן / ז' התחייבות בגין מענק</button>
+                </div>
+                <div id="mini1-feedback" class="mt-3 font-bold text-sm hidden"></div>
+            </div>
+        </section>
+
+        <!-- Chapter 2: Asset Grants -->
+        <section class="glass-card p-8 border-t-8 border-t-accent">
+            <h2 class="text-3xl font-bold text-accent mb-4 flex items-center gap-3">
+                <i data-lucide="building" class="w-8 h-8"></i> פרק 2: מענקים המתייחסים לנכסים
+            </h2>
+            <p class="text-lg text-slate-700 mb-4">מענקים שנועדו לסייע ברכישה או הקמה של נכסים קבועים (נקראים לרוב "מענקי השקעה"). התקן מתיר שתי חלופות טיפול, שנותנות את <strong>אותה השפעה נטו על הרווח</strong>.</p>
+
+            <div class="example-box mb-6 border-r-4 border-accent">
+                <h3 class="font-bold text-lg mb-2 text-slate-800">דוגמה מספרית:</h3>
+                <p class="text-sm">נרכש נכס בעלות <strong>800,000 ש"ח</strong> (פחת קו ישר ל-5 שנים, ללא שייר). ביום הרכישה התקבל מענק במזומן של <strong>200,000 ש"ח</strong>.</p>
+                <p class="text-sm text-slate-500 mt-1 mb-4">חשבו בעצמכם: מה יהיו הוצאות הפחת בכל שיטה? לחצו על הכפתור כדי לבדוק.</p>
+                
+                <button id="btn-show-ch2" onclick="revealContent('ch2-content', 'btn-show-ch2')" class="show-btn">
+                    <i data-lucide="eye" class="w-4 h-4"></i> הצג אופן טיפול ופקודות יומן
+                </button>
+
+                <div id="ch2-content" class="content-hidden mt-6">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <!-- Net -->
+                        <div>
+                            <h4 class="font-bold text-accent mb-2">חלופה א': גישת הנטו (קיזוז)</h4>
+                            <p class="text-sm text-slate-600 mb-2">מנכים את המענק ישירות מעלות הנכס (הנכס ירשם כ-600,000). והפחת יחושב על בסיס זה (120,000 בשנה).</p>
+                            <div class="je-container">
+                                <table class="je-table text-sm">
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' מזומן</td><td class="je-cell je-amount">200,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' נכס (הקטנת עלות)</td><td class="je-cell je-amount">200,000</td></tr>
+                                    <tr class="je-row"><td colspan="2" class="py-1"></td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' הוצ' פחת</td><td class="je-cell je-amount">120,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' פחת נצבר</td><td class="je-cell je-amount">120,000</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Gross -->
+                        <div>
+                            <h4 class="font-bold text-primary mb-2">חלופה ב': גישת הברוטו (נדחית)</h4>
+                            <p class="text-sm text-slate-600 mb-2">הנכס נשאר במלואו (800,000) והפחת מלא (160,000). המענק מחולק כהכנסה במקביל לפחת (40,000 בשנה).</p>
+                            <div class="je-container">
+                                <table class="je-table text-sm">
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' מזומן</td><td class="je-cell je-amount">200,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' הכנסה נדחית (התחייבות)</td><td class="je-cell je-amount">200,000</td></tr>
+                                    <tr class="je-row"><td colspan="2" class="py-1"></td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' הוצ' פחת</td><td class="je-cell je-amount">160,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' פחת נצבר</td><td class="je-cell je-amount">160,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr text-accent">ח' הכנסה נדחית</td><td class="je-cell je-amount text-accent">40,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr text-accent">ז' הכנסות ממענק</td><td class="je-cell je-amount text-accent">40,000</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="toggleExplain('exp-ch2-rationale')" class="text-accent text-sm font-bold flex items-center gap-1 hover:underline mt-4">
+                        <i data-lucide="help-circle" class="w-4 h-4"></i> הסבר לי יותר: מה הרציונל מאחורי כל שיטה?
+                    </button>
+                    <div id="exp-ch2-rationale" class="explain-content">
+                        <div class="explain-inner bg-emerald-50 p-4 rounded-lg border border-emerald-200 text-sm mt-2">
+                            <strong>גישת הנטו:</strong> המהות הכלכלית היא שהממשלה פשוט "השתתפה" בעלות הנכס. לכן, העלות האמיתית שיצאה מכיסנו היא קטנה יותר. הגישה הזו פשוטה ומקטינה את הוצאות הפחת העתידיות, וכך המענק משתקף ברווח והפסד.<br><br>
+                            <strong>גישת הברוטו:</strong> גישה זו נועדה לספק גילוי נאות רחב יותר לקוראי הדוחות (שקיפות). החברה מראה במאזן את השווי המלא של נכסיה המופעלים, ובדוח רווח והפסד מראה במפורש שורה של "הכנסה ממענק" כדי להמחיש את גובה התמיכה הממשלתית השוטפת שהיא מקבלת.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Playground -->
+            <div class="bg-dark p-6 rounded-2xl text-white mt-6 shadow-xl">
+                <h4 class="font-bold mb-4 flex items-center gap-2 text-lg"><i data-lucide="calculator" class="text-secondary"></i> מעבדת סימולציה: תראו שזה יוצא אותו דבר!</h4>
+                <div class="grid grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label class="text-xs text-slate-400">עלות נכס מקורית</label>
+                        <input type="number" id="sim-cost" value="800000" class="w-full bg-slate-800 border border-slate-600 rounded p-2 mt-1 outline-none focus:border-secondary" oninput="calcSim()">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400">מענק שנתקבל</label>
+                        <input type="number" id="sim-grant" value="200000" class="w-full bg-slate-800 border border-slate-600 rounded p-2 mt-1 outline-none focus:border-secondary" oninput="calcSim()">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400">אורך חיים (שנים)</label>
+                        <input type="number" id="sim-years" value="5" class="w-full bg-slate-800 border border-slate-600 rounded p-2 mt-1 outline-none focus:border-secondary" oninput="calcSim()">
+                    </div>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-xl flex justify-between items-center text-sm border border-slate-600">
+                    <div class="text-center w-1/2 border-l border-slate-600 px-4">
+                        <div class="text-slate-300 mb-2 font-bold bg-slate-700 py-1 rounded">השפעה שנתית ברוה"פ: ברוטו</div>
+                        <div class="font-mono flex justify-between mb-1"><span class="text-slate-400">פחת:</span> <span id="sim-g-dep" class="text-warning">(160,000)ש"ח</span></div>
+                        <div class="font-mono flex justify-between mb-1"><span class="text-slate-400">הכנסה ממענק:</span> <span id="sim-g-inc" class="text-accent">40,000ש"ח</span></div>
+                        <div class="font-bold flex justify-between mt-2 border-t border-slate-600 pt-2"><span class="text-white">סה"כ נטו לרווח:</span> <span id="sim-g-total">(120,000)ש"ח</span></div>
+                    </div>
+                    <div class="text-center w-1/2 px-4">
+                        <div class="text-slate-300 mb-2 font-bold bg-slate-700 py-1 rounded">השפעה שנתית ברוה"פ: נטו</div>
+                        <div class="font-mono flex justify-between mb-1"><span class="text-slate-400">פחת (זה הכל):</span> <span id="sim-n-dep" class="text-warning">(120,000)ש"ח</span></div>
+                        <div class="font-mono flex justify-between mb-1"><span class="opacity-0">ריווח</span> <span class="opacity-0">-</span></div>
+                        <div class="font-bold flex justify-between mt-2 border-t border-slate-600 pt-2"><span class="text-white">סה"כ נטו לרווח:</span> <span id="sim-n-total">(120,000)ש"ח</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter 3: Income Grants & Specials -->
+        <section class="glass-card p-8 border-t-8 border-t-secondary">
+            <h2 class="text-3xl font-bold text-secondary mb-4 flex items-center gap-3">
+                <i data-lucide="pie-chart" class="w-8 h-8"></i> פרק 3: מענקים בגין הכנסה ומקרים מיוחדים
+            </h2>
+            
+            <div class="space-y-8 mt-6">
+                <!-- Income Grants -->
+                <div class="example-box">
+                    <h3 class="font-bold text-xl mb-2 text-primary flex items-center gap-2"><i data-lucide="file-text" class="w-5 h-5"></i> א. מענקים המתייחסים להכנסה</h3>
+                    <p class="text-sm text-slate-600 mb-4">מענקים לפיצוי על הוצאות תפעוליות (כמו סבסוד שכר או השתתפות במו"פ). המענק יוכר ברווח והפסד במועד שבו נוצרת ההוצאה.</p>
+                    
+                    <div class="bg-white p-4 rounded border border-slate-200">
+                        <p class="font-bold text-sm mb-2">דוגמה: הוצאות שכר של 100,000 ש"ח. התקבל מענק ייעודי בסך 30,000 ש"ח להשתתפות בשכר.</p>
+                        
+                        <button id="btn-show-inc" onclick="revealContent('inc-content', 'btn-show-inc')" class="show-btn mt-2">
+                            <i data-lucide="eye" class="w-4 h-4"></i> הצג אופן טיפול ופקודות
+                        </button>
+                        
+                        <div id="inc-content" class="content-hidden mt-4 grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-500 mb-1">חלופה א' (נטו): קיזוז מההוצאה</h4>
+                                <div class="je-container mt-0"><table class="je-table text-sm">
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' מזומן</td><td class="je-cell je-amount">30,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' הוצ' שכר (הקטנה)</td><td class="je-cell je-amount">30,000</td></tr>
+                                </table></div>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-500 mb-1">חלופה ב' (ברוטו): סעיף נפרד</h4>
+                                <div class="je-container mt-0"><table class="je-table text-sm">
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' מזומן</td><td class="je-cell je-amount">30,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr text-accent">ז' הכנסות ממענק</td><td class="je-cell je-amount">30,000</td></tr>
+                                </table></div>
+                            </div>
+                            <div class="md:col-span-2">
+                                <button onclick="toggleExplain('exp-ch3-inc')" class="text-primary text-sm font-bold flex items-center gap-1 hover:underline mt-2">
+                                    <i data-lucide="help-circle" class="w-4 h-4"></i> הסבר לי יותר: מה הרציונל פה?
+                                </button>
+                                <div id="exp-ch3-inc" class="explain-content">
+                                    <div class="explain-inner bg-blue-50 p-3 rounded text-sm mt-2 border border-blue-200">
+                                        בדומה לנכסים, ההשפעה נטו זהה. אם נרשום הוצאת שכר של 70,000 ש"ח בלבד (גישת הנטו), זה פשוט וקל להבנה כי זוהי העלות האמיתית לחברה. אם נרשום הוצאה 100,000 ש"ח מול הכנסה 30,000 ש"ח (גישת הברוטו), אנו מציגים לקורא הדוחות את התמונה המלאה של הוצאות החברה במקביל לתמיכה הממשלתית.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Forgivable Loans -->
+                <div class="example-box">
+                    <h3 class="font-bold text-xl mb-2 text-primary flex items-center gap-2"><i data-lucide="handshake" class="w-5 h-5"></i> ב. מחילת הלוואות (Forgivable Loans)</h3>
+                    <p class="text-sm text-slate-600 mb-4">הלוואה מהממשלה שניתנת למחילה. ברגע שיש <strong>ביטחון סביר</strong> שנעמוד בתנאי המחילה, אנו מתייחסים להלוואה זו כמענק לכל דבר ועניין.</p>
+                    
+                    <div class="bg-white p-4 rounded border border-slate-200">
+                        <p class="font-bold text-sm mb-2">דוגמה: קיבלנו הלוואה של 500,000 ש"ח לבניית פס ייצור. התנאי למחילה: העסקת עובדים ל-5 שנים. מה נעשה כשיתקיים ביטחון סביר לעמידה בתנאים?</p>
+                        
+                        <button id="btn-show-loan" onclick="revealContent('loan-content', 'btn-show-loan')" class="show-btn mt-2">
+                            <i data-lucide="eye" class="w-4 h-4"></i> הצג פקודת יומן
+                        </button>
+                        
+                        <div id="loan-content" class="content-hidden mt-4">
+                            <div class="je-container mt-0"><table class="je-table text-sm">
+                                <tr class="je-row"><td class="je-cell je-dr text-warning">ח' הלוואה לשלם (ביטול החוב)</td><td class="je-cell je-amount">500,000</td></tr>
+                                <tr class="je-row"><td class="je-cell je-cr text-accent">ז' הכנסה נדחית (או נכס - לקיזוז)</td><td class="je-cell je-amount">500,000</td></tr>
+                            </table></div>
+                            <button onclick="toggleExplain('exp-loan')" class="text-secondary text-sm font-bold flex items-center gap-1 hover:underline mt-4">
+                                <i data-lucide="help-circle" class="w-4 h-4"></i> הסבר לי יותר: איך חוב יכול להפוך פתאום להכנסה? מה הרציונל?
+                            </button>
+                            <div id="exp-loan" class="explain-content"><div class="explain-inner bg-slate-50 p-3 rounded text-sm border border-slate-200 mt-2">
+                                עיקרון מרכזי בחשבונאות הוא <strong>"מהות מעל צורה"</strong> (Substance over form). גם אם בצורה המשפטית חתמנו על מסמך של "הלוואה", המהות הכלכלית היא שאם נעמוד בתנאים, לא נצטרך להחזיר את הכסף. מרגע שיש ביטחון סביר בכך, אין הצדקה להציג התחייבות פיננסית בדוחות, ולכן אנו הופכים אותה חשבונאית למענק ממשלתי ומטפלים בה בהתאם.
+                            </div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Non Monetary -->
+                <div class="example-box">
+                    <h3 class="font-bold text-xl mb-2 text-primary flex items-center gap-2"><i data-lucide="gift" class="w-5 h-5"></i> ג. מענקים לא-כספיים</h3>
+                    <p class="text-sm text-slate-600 mb-4">קבלת נכס (לרוב בלתי מוחשי) בחינם מהמדינה (למשל: רישיון יבוא, זכויות נחיתה).</p>
+                    
+                    <div class="bg-white p-4 rounded border border-slate-200">
+                        <p class="font-bold text-sm mb-2">דוגמה: המדינה העניקה לחברה רישיון תדר רדיו (שווי הוגן: 2,000,000 ש"ח) ללא תמורה.</p>
+                        
+                        <button id="btn-show-nonmon" onclick="revealContent('nonmon-content', 'btn-show-nonmon')" class="show-btn mt-2">
+                            <i data-lucide="eye" class="w-4 h-4"></i> הצג חלופות
+                        </button>
+                        
+                        <div id="nonmon-content" class="content-hidden mt-4">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-500 mb-1">אופציה א' (שווי הוגן)</h4>
+                                    <div class="je-container mt-0"><table class="je-table text-sm">
+                                        <tr class="je-row"><td class="je-cell je-dr">ח' נכס בלתי מוחשי</td><td class="je-cell je-amount">2,000,000</td></tr>
+                                        <tr class="je-row"><td class="je-cell je-cr">ז' הכנסה נדחית ממענק</td><td class="je-cell je-amount">2,000,000</td></tr>
+                                    </table></div>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-500 mb-1">אופציה ב' (ערך סמלי)</h4>
+                                    <div class="je-container mt-0"><table class="je-table text-sm">
+                                        <tr class="je-row"><td class="je-cell je-dr">ח' נכס בלתי מוחשי</td><td class="je-cell je-amount">1</td></tr>
+                                        <tr class="je-row"><td class="je-cell je-cr">ז' הכנסה</td><td class="je-cell je-amount">1</td></tr>
+                                    </table></div>
+                                </div>
+                            </div>
+                            <button onclick="toggleExplain('exp-nonmon')" class="text-primary text-sm font-bold flex items-center gap-1 hover:underline mt-4">
+                                <i data-lucide="help-circle" class="w-4 h-4"></i> הסבר לי יותר: למה שווי הוגן עדיף על 1 ש"ח?
+                            </button>
+                            <div id="exp-nonmon" class="explain-content"><div class="explain-inner bg-slate-50 p-3 rounded text-sm border border-slate-200 mt-2">
+                                רישום עלות סמלית של 1 ש"ח נועד רק כדי "לתעד" את קיום הנכס במערכת. הבעיה היא שזה מעוות את המציאות הכלכלית. רישיון תדר רדיו הוא נכס בעל ערך עצום. רישום בשווי הוגן (אופציה א') מספק למשקיעים וקוראי הדוחות את המידע הרלוונטי ביותר אודות עוצמת הנכסים שהחברה מפעילה, וגובה ההטבה שקיבלה מהמדינה.
+                            </div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chapter 4: Returns -->
+        <section class="glass-card p-8 border-t-8 border-t-warning">
+            <h2 class="text-3xl font-bold text-warning mb-4 flex items-center gap-3">
+                <i data-lucide="rotate-ccw" class="w-8 h-8"></i> פרק 4: החזר מענק (כשהדברים משתבשים)
+            </h2>
+            <p class="text-lg text-slate-700 mb-4">אם החברה הפרה תנאים והממשלה דורשת את המענק בחזרה, התקן מגדיר זאת כ<strong>שינוי אומדן חשבונאי</strong>. אנו לא מתקנים אחורנית את השנים הקודמות, אלא מתקנים מכאן ולהבא באותה שנת דיווח. המטרה: להעמיד את הספרים במצב בו היו לולא התקבל המענק.</p>
+            
+            <button onclick="toggleExplain('exp-ret-rationale')" class="text-warning text-sm font-bold flex items-center gap-1 hover:underline mb-6">
+                <i data-lucide="help-circle" class="w-4 h-4"></i> הסבר לי יותר: למה זה שינוי אומדן ולא "תיקון טעות"?
+            </button>
+            <div id="exp-ret-rationale" class="explain-content mb-6">
+                <div class="explain-inner bg-rose-50 p-4 rounded-lg border border-rose-200 text-sm">
+                    <strong>רציונל:</strong> כדי לרשום הכנסה ממענק בעבר, נדרש מההנהלה "ביטחון סביר". אם ההנהלה העריכה בתום לב ועל בסיס הנתונים שהיו לה שהיא תעמוד בתנאים, הרי שלא היתה שום "טעות" חשבונאית. המציאות היא שפשוט השתנתה היום. לפי התקינה (IAS 8), כאשר יש מידע חדש שמשנה הערכה קודמת - התיקון נעשה מכאן ולהבא (Prospective). לכן, כל ההפרשים וההשלמות נרשמים באופן מיידי בשנה שבה נדרש ההחזר.
+                </div>
+            </div>
+
+            <div class="space-y-8 mt-6">
+                
+                <!-- Return Asset -->
+                <div class="example-box border-r-4 border-warning">
+                    <h3 class="font-bold text-xl mb-2 text-warning flex items-center gap-2">1. החזר של מענק בגין נכס</h3>
+                    <p class="font-bold text-sm mb-2 text-slate-800">דוגמה: נכס ל-5 שנים. מענק מקורי עמד על 100,000 ש"ח. לאחר שנתיים אנו מחזירים את כל ה-100,000 בתוספת 5,000 ש"ח ריבית פיגורים. חשבו כיצד נטפל בזה בכל אחת מהשיטות.</p>
+                    
+                    <button id="btn-show-retasset" onclick="revealContent('retasset-content', 'btn-show-retasset')" class="show-btn mt-2">
+                        <i data-lucide="eye" class="w-4 h-4"></i> הצג פקודות החזר
+                    </button>
+
+                    <div id="retasset-content" class="content-hidden mt-4">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded border border-slate-200">
+                                <h4 class="font-bold text-sm text-slate-800 mb-1 border-b pb-1">אם טיפלנו בנטו (הקטנו נכס)</h4>
+                                <p class="text-xs text-slate-600 mb-2">נגדיל את הנכס חזרה ב-100,000. בנוסף: במשך שנתיים "חסכנו" פחת של 20,000 כל שנה לשווא. נרשום את הקנס בסך 40,000 מיד.</p>
+                                <div class="je-container mt-0"><table class="je-table text-xs">
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' מכונה</td><td class="je-cell je-amount">100,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr text-warning">ח' הוצ' ריבית</td><td class="je-cell je-amount">5,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' מזומן</td><td class="je-cell je-amount">105,000</td></tr>
+                                    <tr class="je-row"><td colspan="2" class="py-1"></td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr text-rose-600">ח' הוצ' פחת ש. קודמות</td><td class="je-cell je-amount">40,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' פחת נצבר</td><td class="je-cell je-amount">40,000</td></tr>
+                                </table></div>
+                            </div>
+                            <div class="bg-white p-4 rounded border border-slate-200">
+                                <h4 class="font-bold text-sm text-slate-800 mb-1 border-b pb-1">אם טיפלנו בברוטו (הכנסה נדחית)</h4>
+                                <p class="text-xs text-slate-600 mb-2">בשנתיים אלו כבר הכרנו ב-40,000 כהכנסות. נותרו במאזן 60,000 הכנסה נדחית. נאפס אותה ואת הפער נרשום כהוצאה!</p>
+                                <div class="je-container mt-0"><table class="je-table text-xs">
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' הכנסה נדחית</td><td class="je-cell je-amount">60,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr text-rose-600">ח' הוצ' החזר מענק (רוה"פ)</td><td class="je-cell je-amount">40,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr text-warning">ח' הוצ' ריבית</td><td class="je-cell je-amount">5,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' מזומן</td><td class="je-cell je-amount">105,000</td></tr>
+                                </table></div>
+                            </div>
+                        </div>
+                        <button onclick="toggleExplain('exp-ch4-asset')" class="text-warning text-sm font-bold flex items-center gap-1 hover:underline mt-4">
+                            <i data-lucide="help-circle" class="w-4 h-4"></i> הסבר לי יותר: מה ההיגיון המדויק מאחורי הפקודות האלו?
+                        </button>
+                        <div id="exp-ch4-asset" class="explain-content">
+                            <div class="explain-inner bg-rose-50 p-3 rounded text-sm border border-rose-200 mt-2">
+                                <strong>בנטו:</strong> מכיוון שהמענק הקטין לנו את הנכס ביום הראשון, חסכנו למעשה הוצאות פחת של 20,000 ש"ח בכל שנה (100,000 ש"ח / 5 שנים). ביום ההחזר, אנחנו מחזירים לנכס את העלות המקורית שלו כדי שנוכל להפחית אותו כרגיל בעתיד, אבל חייבים גם "לקנוס" את עצמנו מיד ברווח והפסד על ה-40,000 ש"ח פחת שחמקו לנו בשנתיים הראשונות.<br><br>
+                                <strong>בברוטו:</strong> ההתחייבות (הכנסה נדחית) המקורית שלנו עמדה על 100,000 ש"ח. במשך שנתיים 'פרטנו' אותה והכרנו ב-40,000 ש"ח כהכנסות. נשאר לנו בספרים התחייבות של 60,000 ש"ח. כשאנו נדרשים להחזיר 100,000 ש"ח (לא כולל ריבית), ה-60,000 סוגרים את ההתחייבות שנותרה במאזן, וה-40,000 הנותרים נרשמים מיד כהוצאה, שכן הם באים "למחוק" את ההכנסות שרשמנו לשווא בשנתיים הקודמות.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Return Income -->
+                <div class="example-box border-r-4 border-indigo-500">
+                    <h3 class="font-bold text-xl mb-2 text-indigo-700 flex items-center gap-2">2. החזר של מענק בגין הכנסה</h3>
+                    <p class="font-bold text-sm mb-2 text-slate-800">דוגמה: קיבלנו מענק שכר של 50,000 ש"ח לפרויקט של שנתיים (נרשם כהכנסה מראש). בשנה הראשונה שחררנו 25,000 להכנסות. בשנה השנייה הפרויקט הופסק ועלינו להחזיר את כל ה-50,000 (ללא ריבית).</p>
+                    
+                    <button id="btn-show-retinc" onclick="revealContent('retinc-content', 'btn-show-retinc')" class="show-btn mt-2">
+                        <i data-lucide="eye" class="w-4 h-4"></i> הצג פקודת יומן
+                    </button>
+
+                    <div id="retinc-content" class="content-hidden mt-4">
+                        <div class="bg-white p-4 rounded border border-slate-200">
+                            <p class="text-sm text-slate-600 mb-2">אופן הטיפול: נאפס את ה-25,000 שנשארו במאזן (התחייבות / הכנסה מראש), ואת ה-25,000 הנוספים שאנו צריכים להחזיר מכיסנו - כי כבר נרשמו בעבר לשווא כהכנסה - נרשום מיד כהוצאה ברווח והפסד (תחת "הוצאות שכר" או "החזר מענק").</p>
+                            <div class="je-container mt-0 w-full md:w-2/3"><table class="je-table text-sm">
+                                <tr class="je-row"><td class="je-cell je-dr">ח' הכנסה מראש (איפוס התחייבות)</td><td class="je-cell je-amount">25,000</td></tr>
+                                <tr class="je-row"><td class="je-cell je-dr text-indigo-600">ח' הוצ' שכר / החזר מענק</td><td class="je-cell je-amount">25,000</td></tr>
+                                <tr class="je-row"><td class="je-cell je-cr">ז' מזומן</td><td class="je-cell je-amount">50,000</td></tr>
+                            </table></div>
+                        </div>
+                        <button onclick="toggleExplain('exp-ch4-inc')" class="text-indigo-600 text-sm font-bold flex items-center gap-1 hover:underline mt-4">
+                            <i data-lucide="help-circle" class="w-4 h-4"></i> הסבר לי יותר: למה רושמים את ההפרש כהוצאות שכר?
+                        </button>
+                        <div id="exp-ch4-inc" class="explain-content">
+                            <div class="explain-inner bg-indigo-50 p-3 rounded text-sm border border-indigo-200 mt-2">
+                                כשקיבלנו את המענק, המטרה שלו היתה לסבסד לנו את הוצאות השכר. בשנה הראשונה חסכנו (או קיזזנו) 25,000 ש"ח מעלויות השכר שלנו. כעת התברר שלא מגיע לנו המענק. מכיוון שה-25,000 ש"ח שכבר ניצלנו לא יכולים לחזור להיות "הכנסה מראש" במאזן (אנחנו הרי צריכים לשלם אותם במזומן לממשלה עכשיו), אנחנו מגדילים מיד את הוצאות השכר שלנו בסכום הזה. זהו בעצם התיקון לאותה הטבה שקיבלנו בעבר שלא בצדק.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Chapter 5: THE GRAND FINALE EXERCISE -->
+        <section class="bg-dark text-white p-8 md:p-12 rounded-[2rem] shadow-2xl relative">
+            <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+            
+            <div class="relative z-10 text-center mb-10">
+                <h2 class="text-4xl font-extrabold mb-4 flex justify-center items-center gap-4 text-secondary">
+                    <i data-lucide="gamepad-2" class="w-10 h-10"></i> פרק 5: התרגיל המסכם והגדול
+                </h2>
+                <p class="text-lg text-slate-300">חיברנו את הכל. נסו לפתור לבד! (ניתן לבקש רמזים או לראות פתרון אם נתקעתם).</p>
+            </div>
+
+            <!-- Scenario Data -->
+            <div class="bg-slate-800 border border-slate-600 rounded-xl p-6 mb-8 relative z-10">
+                <h3 class="font-bold text-xl mb-3 text-white border-b border-slate-600 pb-2">נתוני המקרה:</h3>
+                <ul class="space-y-2 text-slate-300 font-medium">
+                    <li><span class="text-secondary">•</span> ב-<strong>1.1.2021</strong> נרכשה מכונה ב-<strong>900,000 ש"ח</strong> (אורך חיים 5 שנים, ערך שייר 100,000 ש"ח). פחת קו ישר. והוגשה בקשה למענק.</li>
+                    <li><span class="text-secondary">•</span> ב-<strong>1.1.2022</strong> (אחרי שנה) התקבל אישור זכאות למענק ע"ס <strong>200,000 ש"ח</strong> (יש ודאות לציות).</li>
+                    <li><span class="text-warning">•</span> ב-<strong>1.7.2022</strong> המזומן התקבל בפועל בבנק.</li>
+                    <li><span class="text-warning">•</span> ב-<strong>31.3.2024</strong> הממשלה דורשת הכל בחזרה בתוספת <strong>5% ריבית פשוטה לשנה</strong> (מיום קבלת המזומן). ב-<strong>30.6.2024</strong> שולם ההחזר כולל הריבית שנצברה.</li>
+                </ul>
+            </div>
+
+            <div class="relative z-10 space-y-6">
+                
+                <!-- Ex Step 1 -->
+                <div id="ex-step-1" class="bg-slate-100 text-slate-800 p-6 rounded-xl border-l-8 border-l-primary shadow-lg">
+                    <h3 class="font-bold text-xl text-primary mb-3">שלב 1: שנת 2021 (שנת הרכישה)</h3>
+                    <p class="mb-4">רכשנו את הנכס, אך טרם קיבלנו זכאות. המכונה מטופלת כרגיל.</p>
+                    
+                    <label class="block font-bold mb-2">מהן הוצאות הפחת שיירשמו בשנת 2021 (ב-ש"ח)?</label>
+                    <input type="number" id="ans-s1" class="p-3 rounded border border-slate-300 font-mono w-full md:w-64 text-lg outline-none focus:border-primary mb-4" placeholder="הזן מספר">
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="checkExStep1()" class="bg-primary text-white px-6 py-2 rounded font-bold hover:bg-blue-800 transition">בדוק תשובה</button>
+                        <button onclick="showHintEx(1)" class="bg-amber-100 text-amber-800 px-4 py-2 rounded font-bold hover:bg-amber-200 transition">תן רמז 💡</button>
+                        <button onclick="solveEx(1)" class="bg-slate-200 text-slate-700 px-4 py-2 rounded font-bold hover:bg-slate-300 transition">גלה לי 🙈</button>
+                    </div>
+                    
+                    <div id="hint-s1" class="hint-box">רמז: עלות מקורית (900,000) פחות ערך שייר (100,000), לחלק ל-5 שנים.</div>
+                    <div id="msg-s1" class="mt-3 font-bold text-sm"></div>
+
+                    <!-- Hidden JE -->
+                    <div id="je-s1" class="step-hidden mt-6">
+                        <div class="je-container bg-white border border-slate-200">
+                            <h4 class="font-bold text-slate-600 mb-2 uppercase text-sm border-b pb-1">פקודות יומן</h4>
+                            <table class="je-table text-sm">
+                                <tr class="je-row"><td class="je-cell je-dr">ח' הוצאות פחת</td><td class="je-cell je-amount">160,000</td></tr>
+                                <tr class="je-row"><td class="je-cell je-cr">ז' פחת נצבר</td><td class="je-cell je-amount">160,000</td></tr>
+                            </table>
+                        </div>
+                        <button onclick="showExStep2()" class="mt-6 bg-accent text-white px-6 py-3 rounded-full font-bold w-full hover:bg-emerald-700 transition">המשך לשנת 2022 ➡️</button>
+                    </div>
+                </div>
+
+                <!-- Ex Step 2 -->
+                <div id="ex-step-2" class="bg-slate-100 text-slate-800 p-6 rounded-xl border-l-8 border-l-secondary shadow-lg step-hidden">
+                    <h3 class="font-bold text-xl text-secondary mb-3">שלב 2: שנת 2022 (הכרה במענק)</h3>
+                    <p class="mb-2">הוכרה זכאות למענק של 200,000 ש"ח. אורך החיים המקורי היה 5, חלפה שנה 1 (נותרו 4).</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mt-4 mb-4">
+                        <div class="bg-white p-4 rounded border border-slate-300">
+                            <h4 class="font-bold text-primary mb-2">גישת הנטו</h4>
+                            <label class="block text-sm mb-1">מהן הוצאות הפחת <strong>לשנת 2022</strong>?</label>
+                            <input type="number" id="ans-s2-net" class="w-full p-2 border rounded font-mono mb-2 outline-none focus:border-secondary">
+                        </div>
+                        <div class="bg-white p-4 rounded border border-slate-300">
+                            <h4 class="font-bold text-primary mb-2">גישת הברוטו</h4>
+                            <label class="block text-sm mb-1">מהן <strong>הכנסות ממענק</strong> שיירשמו ב-2022?</label>
+                            <input type="number" id="ans-s2-gross" class="w-full p-2 border rounded font-mono mb-2 outline-none focus:border-secondary">
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="checkExStep2()" class="bg-secondary text-white px-6 py-2 rounded font-bold hover:bg-sky-700 transition">בדוק תשובה</button>
+                        <button onclick="showHintEx(2)" class="bg-amber-100 text-amber-800 px-4 py-2 rounded font-bold hover:bg-amber-200 transition">תן רמז 💡</button>
+                        <button onclick="solveEx(2)" class="bg-slate-200 text-slate-700 px-4 py-2 rounded font-bold hover:bg-slate-300 transition">גלה לי 🙈</button>
+                    </div>
+
+                    <div id="hint-s2" class="hint-box">רמז: <br>נטו: ערך ספרים קודם (900 פחות 160) = 740. מורידים מענק (200) = 540. מורידים שייר (100) = 440 לחישוב פחת לחלק ל-4 שנים. <br>ברוטו: מחלקים את המענק (200,000) ב-4 השנים שנותרו.</div>
+                    <div id="msg-s2" class="mt-3 font-bold text-sm"></div>
+
+                    <!-- Hidden JE -->
+                    <div id="je-s2" class="step-hidden mt-6">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="je-container bg-white border border-slate-200">
+                                <div class="text-center font-bold text-sm border-b pb-1 mb-2">נטו (קיזוז) - פקודות ב-2022</div>
+                                <table class="je-table text-sm">
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' חייבים</td><td class="je-cell je-amount">200,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' מכונה</td><td class="je-cell je-amount">200,000</td></tr>
+                                    <tr class="je-row"><td colspan="2" class="py-1"></td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' הוצ' פחת</td><td class="je-cell je-amount">110,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' פחת נצבר</td><td class="je-cell je-amount">110,000</td></tr>
+                                </table>
+                            </div>
+                            <div class="je-container bg-white border border-slate-200">
+                                <div class="text-center font-bold text-sm border-b pb-1 mb-2">ברוטו (נדחית) - פקודות ב-2022</div>
+                                <table class="je-table text-sm">
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' חייבים</td><td class="je-cell je-amount">200,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' הכנסה נדחית</td><td class="je-cell je-amount">200,000</td></tr>
+                                    <tr class="je-row"><td colspan="2" class="py-1"></td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' הוצ' פחת</td><td class="je-cell je-amount">160,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' פחת נצבר</td><td class="je-cell je-amount">160,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr text-accent">ח' הכנסה נדחית</td><td class="je-cell je-amount">50,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr text-accent">ז' הכנסות מענק</td><td class="je-cell je-amount">50,000</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                        <button onclick="showExStep3()" class="mt-6 bg-warning text-white px-6 py-3 rounded-full font-bold w-full hover:bg-rose-700 transition">המשך לשנת 2024 (החזר מענק!) ➡️</button>
+                    </div>
+                </div>
+
+                <!-- Ex Step 3 -->
+                <div id="ex-step-3" class="bg-slate-100 text-slate-800 p-6 rounded-xl border-l-8 border-l-warning shadow-lg step-hidden">
+                    <h3 class="font-bold text-xl text-warning mb-3">שלב 3: 30 ביוני 2024 (החזר מענק)</h3>
+                    <p class="mb-2">מחזירים את כל המענק (200,000) בתוספת 5% ריבית מיום קבלת המזומן (1.7.2022) ועד התשלום (30.6.2024). התיקון הוא לשנת 2024.</p>
+                    
+                    <div class="grid md:grid-cols-3 gap-4 mt-4 mb-4">
+                        <div class="bg-rose-50 p-3 rounded border border-rose-200">
+                            <label class="block text-sm font-bold text-rose-900 mb-1">1. הוצאות ריבית (סה"כ)</label>
+                            <input type="number" id="ans-s3-int" class="w-full p-2 border rounded font-mono text-sm outline-none focus:border-warning">
+                        </div>
+                        <div class="bg-white p-3 rounded border border-slate-300">
+                            <label class="block text-sm font-bold mb-1">2. נטו: כמה פחת שנים קודמות ירשם מיד?</label>
+                            <input type="number" id="ans-s3-net" class="w-full p-2 border rounded font-mono text-sm outline-none focus:border-warning">
+                        </div>
+                        <div class="bg-white p-3 rounded border border-slate-300">
+                            <label class="block text-sm font-bold mb-1">3. ברוטו: כמה הוצאות החזר ירשמו ברוה"פ?</label>
+                            <input type="number" id="ans-s3-gross" class="w-full p-2 border rounded font-mono text-sm outline-none focus:border-warning">
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="checkExStep3()" class="bg-warning text-white px-6 py-2 rounded font-bold hover:bg-rose-700 transition">בדוק וסיים</button>
+                        <button onclick="showHintEx(3)" class="bg-amber-100 text-amber-800 px-4 py-2 rounded font-bold hover:bg-amber-200 transition">תן רמז 💡</button>
+                        <button onclick="solveEx(3)" class="bg-slate-200 text-slate-700 px-4 py-2 rounded font-bold hover:bg-slate-300 transition">גלה לי 🙈</button>
+                    </div>
+
+                    <div id="hint-s3" class="hint-box">רמז:<br>1. ריבית: מ-1.7.22 עד 30.6.24 זה בדיוק שנתיים (200,000 * 5% * 2).<br>2. נטו פחת: בשנים 22 ו-23 הפחתנו רק 110 במקום 160. החסרנו 50 כל שנה במשך שנתיים!<br>3. ברוטו הוצאה: הכרנו ב-50 כהכנסה גם ב-22 וגם ב-23 (סה"כ 100 נוצלו מתוך 200). את השאר יש במאזן. מה שמחזירים מעבר ליתרת המאזן - נופל כהוצאה.</div>
+                    <div id="msg-s3" class="mt-3 font-bold text-sm"></div>
+
+                    <!-- Hidden JE -->
+                    <div id="je-s3" class="step-hidden mt-6">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="je-container bg-white border border-slate-200">
+                                <div class="text-center font-bold text-sm border-b pb-1 mb-2">גישת נטו (החזר)</div>
+                                <table class="je-table text-sm">
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' מכונה</td><td class="je-cell je-amount">200,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr text-warning">ח' הוצ' ריבית</td><td class="je-cell je-amount">20,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' מזומן</td><td class="je-cell je-amount">220,000</td></tr>
+                                    <tr class="je-row"><td colspan="2" class="py-1"></td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr text-rose-600">ח' הוצ' פחת ש.ק</td><td class="je-cell je-amount">100,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' פחת נצבר</td><td class="je-cell je-amount">100,000</td></tr>
+                                </table>
+                            </div>
+                            <div class="je-container bg-white border border-slate-200">
+                                <div class="text-center font-bold text-sm border-b pb-1 mb-2">גישת ברוטו (החזר)</div>
+                                <table class="je-table text-sm">
+                                    <tr class="je-row"><td class="je-cell je-dr">ח' הכנסה נדחית</td><td class="je-cell je-amount">100,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr text-rose-600">ח' הוצ' בגין החזר</td><td class="je-cell je-amount">100,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-dr text-warning">ח' הוצ' ריבית</td><td class="je-cell je-amount">20,000</td></tr>
+                                    <tr class="je-row"><td class="je-cell je-cr">ז' מזומן</td><td class="je-cell je-amount">220,000</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Evaluation Report -->
+                <div id="eval-report" class="bg-white p-8 rounded-xl shadow-2xl text-center border-t-8 border-t-accent step-hidden mt-8">
+                    <i data-lucide="line-chart" class="w-16 h-16 text-primary mx-auto mb-4"></i>
+                    <h2 class="text-3xl font-extrabold text-slate-800 mb-4">משוב ותרגול</h2>
+                    <div id="eval-text" class="text-lg text-slate-600 bg-slate-50 p-6 rounded-lg border border-slate-200 text-right max-w-3xl mx-auto">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        lucide.createIcons();
+
+        // General toggles & reveals
+        function toggleExplain(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('open');
+        }
+
+        function revealContent(id, btnId) {
+            const el = document.getElementById(id);
+            el.classList.remove('content-hidden');
+            el.classList.add('content-visible');
+            document.getElementById(btnId).style.display = 'none';
+        }
+
+        // Mini 1
+        function checkMini1(isCorrect) {
+            const fb = document.getElementById('mini1-feedback');
+            fb.classList.remove('hidden');
+            if(isCorrect) {
+                fb.innerHTML = '<span class="text-accent">✅ נכון! קבלת המזומן נרשמת כהתחייבות עד שיתקיים ביטחון סביר.</span>';
+            } else {
+                fb.innerHTML = '<span class="text-warning">❌ שים לב! לא מתקיים ביטחון סביר, לכן אסור להכיר בהכנסה נדחית ממענק. מדובר כעת בהתחייבות עד שהתמונה תתבהר.</span>';
+            }
+        }
+
+        // Sim 2 Formatting (No plus sign, parenthesis for negative)
+        const formatMoney = (num) => {
+            const rounded = Math.round(num);
+            const str = new Intl.NumberFormat('he-IL').format(Math.abs(rounded));
+            return rounded < 0 ? `(${str})ש"ח` : `${str}ש"ח`;
+        };
+
+        function calcSim() {
+            const c = Number(document.getElementById('sim-cost').value) || 0;
+            const g = Number(document.getElementById('sim-grant').value) || 0;
+            const y = Number(document.getElementById('sim-years').value) || 1;
+            
+            const gDep = -(c / y);
+            const gInc = g / y;
+            const gTot = gDep + gInc;
+
+            const nDep = -((c - g) / y);
+
+            document.getElementById('sim-g-dep').innerText = formatMoney(gDep);
+            document.getElementById('sim-g-inc').innerText = formatMoney(gInc);
+            document.getElementById('sim-g-total').innerText = formatMoney(gTot);
+            
+            document.getElementById('sim-n-dep').innerText = formatMoney(nDep);
+            document.getElementById('sim-n-total').innerText = formatMoney(nDep);
+        }
+        calcSim();
+
+        // Final Ex Tools
+        let errors = { s1: 0, s2: 0, s3: 0 };
+
+        function setInputState(id, isCorrect) {
+            const el = document.getElementById(id);
+            if(isCorrect) {
+                el.classList.add('input-success'); el.classList.remove('input-error');
+            } else {
+                el.classList.add('input-error'); el.classList.remove('input-success');
+            }
+        }
+
+        function showHintEx(step) {
+            const hintBox = document.getElementById(`hint-s${step}`);
+            hintBox.style.display = hintBox.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Ex Step 1
+        function checkExStep1() {
+            const ans = Number(document.getElementById('ans-s1').value);
+            if(ans === 160000) {
+                setInputState('ans-s1', true);
+                document.getElementById('msg-s1').innerHTML = '<span class="text-accent">✅ תשובה נכונה!</span>';
+                document.getElementById('je-s1').classList.replace('step-hidden', 'step-visible');
+            } else {
+                setInputState('ans-s1', false);
+                errors.s1++;
+                document.getElementById('msg-s1').innerHTML = '<span class="text-warning">❌ טעות בחישוב. כדאי להיעזר ברמז.</span>';
+            }
+        }
+        
+        function solveEx(step) {
+            if(step === 1) {
+                document.getElementById('ans-s1').value = 160000;
+                checkExStep1();
+            } else if(step === 2) {
+                document.getElementById('ans-s2-net').value = 110000;
+                document.getElementById('ans-s2-gross').value = 50000;
+                checkExStep2();
+            } else if(step === 3) {
+                document.getElementById('ans-s3-int').value = 20000;
+                document.getElementById('ans-s3-net').value = 100000;
+                document.getElementById('ans-s3-gross').value = 100000;
+                checkExStep3();
+            }
+        }
+        
+        function showExStep2() {
+            const s2 = document.getElementById('ex-step-2');
+            s2.classList.replace('step-hidden', 'step-visible');
+            s2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Ex Step 2
+        function checkExStep2() {
+            const net = Number(document.getElementById('ans-s2-net').value);
+            const gross = Number(document.getElementById('ans-s2-gross').value);
+            
+            const netCorrect = (net === 110000); 
+            const grossCorrect = (gross === 50000);
+
+            setInputState('ans-s2-net', netCorrect);
+            setInputState('ans-s2-gross', grossCorrect);
+
+            if(netCorrect && grossCorrect) {
+                document.getElementById('msg-s2').innerHTML = '<span class="text-accent">✅ מצוין!</span>';
+                document.getElementById('je-s2').classList.replace('step-hidden', 'step-visible');
+            } else {
+                errors.s2++;
+                document.getElementById('msg-s2').innerHTML = '<span class="text-warning">❌ ישנה טעות בחלק מהשדות. מומלץ לבדוק את הרמז.</span>';
+            }
+        }
+        
+        function showExStep3() {
+            const s3 = document.getElementById('ex-step-3');
+            s3.classList.replace('step-hidden', 'step-visible');
+            s3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Ex Step 3
+        function checkExStep3() {
+            const int = Number(document.getElementById('ans-s3-int').value);
+            const net = Number(document.getElementById('ans-s3-net').value);
+            const gross = Number(document.getElementById('ans-s3-gross').value);
+
+            const intCor = (int === 20000);
+            const netCor = (net === 100000);
+            const grossCor = (gross === 100000);
+
+            setInputState('ans-s3-int', intCor);
+            setInputState('ans-s3-net', netCor);
+            setInputState('ans-s3-gross', grossCor);
+
+            if(intCor && netCor && grossCor) {
+                document.getElementById('msg-s3').innerHTML = '<span class="text-accent">✅ יפה מאוד! סיימת את השלב.</span>';
+                document.getElementById('je-s3').classList.replace('step-hidden', 'step-visible');
+                showFinalEval();
+            } else {
+                errors.s3++;
+                document.getElementById('msg-s3').innerHTML = '<span class="text-warning">❌ שגיאה בחישובים. מומלץ להיעזר ברמז המצורף למטה.</span>';
+            }
+        }
+
+        function showFinalEval() {
+            setTimeout(() => {
+                const rep = document.getElementById('eval-report');
+                rep.classList.replace('step-hidden', 'step-visible');
+                rep.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                const totErr = errors.s1 + errors.s2 + errors.s3;
+                let text = "";
+
+                if(totErr === 0) {
+                    text = "<strong class='text-accent text-xl'>כל הכבוד! צלחת את התרגיל.</strong><br>הראית הבנה יפה של התקן. מומלץ להמשיך לתרגל שאלות מורכבות יותר ממבחנים כדי לבסס את החומר סופית.";
+                } else {
+                    text = "<strong class='text-primary text-xl'>עבודה טובה. הנה כמה נקודות ממוקדות שמומלץ לחזור עליהן כדי להשתפר:</strong><br><ul class='mt-3 space-y-2 list-disc mr-6'>";
+                    if(errors.s1 > 0) text += "<li><strong>חישוב פחת:</strong> הקפד לתרגל שוב את נוסחת הקו הישר וניכוי ערך השייר במלואו לפני החלוקה בשנות החיים.</li>";
+                    if(errors.s2 > 0) text += "<li><strong>גישת הנטו מול ברוטו:</strong> חזור על חישוב הפחת מחדש לפי העלות המופחתת (נטו) בהשוואה לפריסת הכנסה ממענק במקביל לפחת (ברוטו).</li>";
+                    if(errors.s3 > 0) text += "<li><strong>החזר מענק (שינוי אומדן):</strong> נושא מאתגר הדורש תשומת לב. זכור: המטרה היא 'לקנוס' את עצמנו על פחת שחסכנו בעבר (נטו), או לבטל באופן מיידי הכנסה שהכרנו לשווא (ברוטו).</li>";
+                    text += "</ul>";
+                }
+                text += "<div class='mt-8 pt-4 border-t border-slate-300 text-sm text-slate-500 text-center font-bold'>הקובץ הופק באדיבות ד״ר צבאן למשוב shay.tsaban@gmail.com</div>";
+                
+                document.getElementById('eval-text').innerHTML = text;
+            }, 800);
+        }
+
+    </script>
+</body>
+</html>
