@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>פתרון דוגמה 2.1 — IAS 37 הפרשות</title>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Heebo:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:    #0d1b2a;
+    --ink:     #1a2e40;
+    --teal:    #0e7c6a;
+    --teal-lt: #12a488;
+    --teal-bg: #e8f4f1;
+    --gold:    #c8972b;
+    --gold-lt: #e8b84b;
+    --gold-bg: #fbf3e0;
+    --slate:   #4a6274;
+    --paper:   #f5f7f6;
+    --white:   #ffffff;
+    --red:     #c0392b;
+    --red-bg:  #fdecea;
+    --line:    #cdd9d5;
+    --blue-bg: #e6f0ff;
+    --blue:    #1d4ed8;
+    --purple:  #7c3aed;
+    --purple-bg: #f3f0ff;
+    --orange:  #d97706;
+    --orange-bg: #fffbeb;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    direction: rtl;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  .ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+  .num { direction: ltr; unicode-bidi: isolate; font-family: 'JetBrains Mono', monospace; font-weight: 600; display: inline-block; }
+  .date { direction: ltr; unicode-bidi: isolate; font-weight: 600; display: inline-block; }
+
+  /* === HEADER === */
+  .header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 2.4rem 1.5rem 2rem;
+    text-align: center;
+    position: relative;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; left: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--teal) 0%, var(--gold) 100%);
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(14, 124, 106, 0.25);
+    border: 1px solid rgba(18, 164, 136, 0.4);
+    border-radius: 4px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.74rem;
+    color: var(--teal-lt);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.7rem;
+  }
+  .header h1 { font-family: 'Frank Ruhl Libre', serif; font-size: clamp(1.5rem, 3.6vw, 2.3rem); font-weight: 900; line-height: 1.3; }
+  .header h1 span { color: var(--gold-lt); }
+  .header .sub { font-size: 0.92rem; color: rgba(255,255,255,0.65); margin-top: 0.55rem; font-weight: 300; max-width: 700px; margin-right: auto; margin-left: auto; }
+
+  .container { max-width: 1080px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+
+  /* === CORRECTION ALERT — very prominent === */
+  .correction-alert {
+    background: linear-gradient(135deg, #1a0533 0%, #2d0a5c 100%);
+    border: 2px solid var(--purple);
+    border-radius: 12px;
+    padding: 1.6rem 1.8rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .correction-alert::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--purple) 0%, #ec4899 100%);
+  }
+  .correction-alert-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+  .correction-alert-icon {
+    width: 42px; height: 42px;
+    background: var(--purple);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .correction-alert h2 {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #e9d5ff;
+  }
+  .correction-alert h2 em { color: var(--gold-lt); font-style: normal; }
+  .correction-compare {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.8rem;
+    align-items: center;
+    margin: 1rem 0;
+  }
+  @media (max-width: 700px) { .correction-compare { grid-template-columns: 1fr; } }
+  .compare-box {
+    border-radius: 8px;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.87rem;
+    line-height: 1.7;
+  }
+  .compare-box.wrong {
+    background: rgba(192,57,43,0.18);
+    border: 1px solid rgba(192,57,43,0.5);
+  }
+  .compare-box.right {
+    background: rgba(14,124,106,0.2);
+    border: 1px solid rgba(18,164,136,0.5);
+  }
+  .compare-box .cb-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .compare-box.wrong .cb-label { color: #f87171; }
+  .compare-box.right .cb-label { color: var(--teal-lt); }
+  .compare-box p { color: #e2e8f0; font-size: 0.86rem; }
+  .compare-box strong { font-weight: 800; }
+  .compare-arrow { font-size: 1.8rem; color: var(--gold-lt); text-align: center; }
+
+  .correction-norm {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-top: 0.8rem;
+  }
+  .correction-norm p { color: #cbd5e1; font-size: 0.88rem; line-height: 1.8; }
+  .correction-norm strong { color: var(--gold-lt); }
+  .correction-norm .ias-ref {
+    display: inline-block;
+    background: var(--purple);
+    color: white;
+    border-radius: 4px;
+    padding: 0.1rem 0.55rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-left: 0.3rem;
+  }
+
+  /* === QUESTION BOX === */
+  .question-box {
+    background: var(--white);
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    border-right: 5px solid var(--gold);
+    padding: 1.5rem 1.7rem 1.4rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .question-box .qb-label { font-size: 0.78rem; color: var(--gold); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.35rem; }
+  .question-box .q-title { font-family: 'Frank Ruhl Libre', serif; font-size: 1.35rem; font-weight: 900; color: var(--navy); margin-bottom: 0.85rem; border-bottom: 1px solid var(--line); padding-bottom: 0.55rem; }
+  .question-box p { font-size: 0.96rem; margin-bottom: 0.45rem; color: var(--ink); line-height: 1.85; }
+  .question-box .req { margin-top: 1rem; padding: 0.7rem 1rem; background: var(--teal-bg); border-right: 3px solid var(--teal); border-radius: 4px; font-size: 0.95rem; }
+  .question-box .req strong { color: var(--teal); }
+
+  /* === SECTION === */
+  .section { background: var(--white); border-radius: 10px; border: 1px solid var(--line); overflow: hidden; margin-bottom: 1.6rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .section-header { background: linear-gradient(135deg, var(--navy) 0%, #1a3a50 100%); color: var(--white); padding: 1rem 1.4rem; display: flex; align-items: center; gap: 0.9rem; }
+  .section-num { width: 36px; height: 36px; border-radius: 50%; background: var(--gold); color: var(--white); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem; flex-shrink: 0; }
+  .section-header h3 { font-family: 'Frank Ruhl Libre', serif; font-size: 1.18rem; font-weight: 700; }
+  .section-header .h-sub { font-size: 0.78rem; color: rgba(255,255,255,0.6); font-weight: 300; margin-top: 0.15rem; }
+  .section-body { padding: 1.5rem; }
+
+  /* === CALC BOX === */
+  .calc-box { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.2rem; margin: 0.7rem 0; }
+  .calc-step-label { font-size: 0.74rem; font-weight: 700; color: var(--teal); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem; }
+  .calc-formula { direction: ltr; unicode-bidi: isolate; font-family: 'JetBrains Mono', monospace; background: var(--navy); color: #d4e9e3; padding: 0.55rem 0.9rem; border-radius: 5px; font-size: 0.88rem; margin: 0.4rem 0; display: block; text-align: left; white-space: nowrap; overflow-x: auto; border-right: 3px solid var(--teal); }
+  .calc-formula .res { color: var(--gold-lt); font-weight: 700; }
+  .calc-formula .fn  { color: var(--teal-lt); font-weight: 700; }
+  .calc-formula .com { color: #6b8a83; font-style: italic; }
+
+  /* Purple variant for the rate-change correction */
+  .calc-formula.purple { border-right-color: var(--purple); }
+  .calc-formula.purple .res { color: #c4b5fd; }
+
+  .calc-explanation { font-size: 0.86rem; color: var(--slate); line-height: 1.75; margin-top: 0.5rem; }
+
+  /* === FACTS GRID === */
+  .facts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-bottom: 1rem; }
+  @media (max-width: 700px) { .facts-grid { grid-template-columns: 1fr; } }
+  .fact-card { background: var(--paper); border: 1px solid var(--line); border-radius: 7px; padding: 0.7rem 0.9rem; }
+  .fact-card-label { font-size: 0.7rem; color: var(--slate); margin-bottom: 0.2rem; font-weight: 500; }
+  .fact-card-value { font-size: 0.95rem; font-weight: 700; color: var(--navy); }
+
+  /* === MOVEMENT TABLE === */
+  .move-table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--line); background: var(--white); }
+  .move-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 880px; }
+  .move-table thead tr { background: var(--navy); color: var(--white); }
+  .move-table thead th { padding: 0.85rem 0.7rem; text-align: center; font-weight: 600; font-size: 0.78rem; border-left: 1px solid rgba(255,255,255,0.1); }
+  .move-table thead th:last-child { border-left: none; }
+  .move-table tbody td { padding: 0.85rem 0.7rem; text-align: center; border-bottom: 1px solid var(--line); border-left: 1px solid var(--line); background: var(--white); vertical-align: middle; }
+  .move-table tbody td:last-child { border-left: none; }
+  .move-table tbody tr:hover td { background: #f8fbfa; }
+  .move-table .nature { text-align: right; font-size: 0.85rem; line-height: 1.5; }
+  .move-table .closing { background: var(--teal-bg) !important; font-weight: 700; color: var(--teal); }
+  .move-table .opening { background: var(--gold-bg) !important; font-weight: 700; color: #8a6418; }
+  .move-table .amount-pos { color: var(--teal); font-weight: 700; }
+  .move-table tr.total-row td { background: var(--navy) !important; color: var(--white) !important; font-weight: 700; font-size: 0.92rem; }
+  .move-table tr.total-row td .num { color: var(--gold-lt); }
+  .move-table tr.total-row td:nth-child(1) { text-align: right; padding-right: 1.2rem; }
+
+  /* Purple highlight for rate-change row */
+  .move-table tr.rate-row td { background: var(--purple-bg) !important; }
+  .move-table tr.rate-row:hover td { background: #ede9fe !important; }
+  .move-table tr.rate-row .amount-pos { color: var(--purple) !important; }
+  .move-table tr.rate-row .opening { background: #f3f0ff !important; color: var(--purple) !important; }
+  .move-table tr.rate-row .closing { background: #ddd6fe !important; color: var(--purple) !important; }
+
+  /* === EXPLAIN BUTTON === */
+  .explain-btn { background: var(--teal); color: var(--white); border: none; padding: 0.4rem 0.8rem; border-radius: 5px; font-family: 'Heebo', sans-serif; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.35rem; white-space: nowrap; }
+  .explain-btn:hover { background: var(--teal-lt); transform: translateY(-1px); }
+  .explain-btn.open { background: var(--gold); }
+  .explain-btn.purple-btn { background: var(--purple); }
+  .explain-btn.purple-btn:hover { background: #6d28d9; }
+  .explain-btn.purple-btn.open { background: var(--gold); }
+  .explain-btn .chev { font-size: 0.85rem; font-weight: 800; transition: transform 0.25s; display: inline-block; }
+  .explain-btn.open .chev { transform: rotate(180deg); }
+
+  /* === DETAIL ROW === */
+  .row-detail { display: none; }
+  .row-detail.show { display: table-row; }
+  .row-detail td { background: var(--paper) !important; padding: 1.4rem 1.5rem !important; border-bottom: 2px solid var(--teal) !important; border-top: 1px solid var(--teal-lt) !important; text-align: right !important; }
+  .row-detail.purple-detail td { border-bottom-color: var(--purple) !important; border-top-color: #a78bfa !important; background: var(--purple-bg) !important; }
+
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 800px) { .detail-grid { grid-template-columns: 1fr; } }
+  .detail-block { background: var(--white); border: 1px solid var(--line); border-radius: 7px; padding: 1rem 1.1rem; }
+  .detail-block h4 { font-size: 0.85rem; color: var(--teal); font-weight: 700; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.45rem; font-family: 'Heebo', sans-serif; }
+  .detail-block h4.purple { color: var(--purple); }
+  .detail-block h4 .icon { width: 24px; height: 24px; background: var(--teal); color: white; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; }
+  .detail-block h4 .icon.purple { background: var(--purple); }
+  .detail-block p { font-size: 0.86rem; line-height: 1.75; color: var(--ink); margin-bottom: 0.4rem; }
+  .detail-block p:last-child { margin-bottom: 0; }
+  .detail-block p strong { color: var(--navy); font-weight: 700; }
+
+  /* KEY INSIGHT BOX in detail */
+  .key-insight {
+    background: linear-gradient(135deg, #1a0533 0%, #2d0a5c 100%);
+    border: 1px solid var(--purple);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin: 0.8rem 0;
+  }
+  .key-insight p { color: #e2e8f0; font-size: 0.87rem; line-height: 1.8; margin-bottom: 0.4rem; }
+  .key-insight p:last-child { margin-bottom: 0; }
+  .key-insight strong { color: #c4b5fd; }
+  .key-insight .ias-badge { display: inline-block; background: var(--purple); color: white; border-radius: 4px; padding: 0.1rem 0.55rem; font-size: 0.74rem; font-weight: 800; margin-left: 0.3rem; }
+
+  .je-title { margin-top: 1rem; color: var(--navy); font-family: 'Frank Ruhl Libre', serif; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.45rem; }
+
+  /* === JOURNAL ENTRY === */
+  .je { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; font-size: 0.86rem; background: var(--white); }
+  .je-table { width: 100%; border-collapse: collapse; }
+  .je-table th { background: var(--ink); color: var(--white); padding: 0.5rem 0.7rem; font-weight: 600; font-size: 0.75rem; text-align: center; }
+  .je-table th:first-child { text-align: right; padding-right: 1rem; }
+  .je-table td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); text-align: center; }
+  .je-table td:first-child { text-align: right; padding-right: 1rem; }
+  .je-table tr:last-child td { border-bottom: none; }
+  .je-debit { color: var(--navy); font-weight: 600; }
+  .je-credit { color: var(--slate); padding-right: 2.4rem !important; }
+  .je-amt-d { color: var(--teal); font-weight: 700; }
+  .je-amt-c { color: var(--red); font-weight: 700; }
+  .je-amt-d.purple { color: var(--purple); }
+
+  /* Purple JE table */
+  .je.purple .je-table th { background: #2d0a5c; }
+  .je.purple { border-color: #a78bfa; }
+
+  /* === NATURE TAGS === */
+  .nature-tag { display: inline-block; padding: 0.18rem 0.55rem; border-radius: 12px; font-size: 0.7rem; font-weight: 700; margin-left: 0.4rem; white-space: nowrap; }
+  .nature-tag.recog  { background: var(--teal-bg); color: var(--teal); }
+  .nature-tag.unwind { background: var(--blue-bg); color: var(--blue); }
+  .nature-tag.rate   { background: var(--purple-bg); color: var(--purple); border: 1px solid #a78bfa; }
+
+  .classify-tag { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.78rem; font-weight: 700; }
+  .classify-tag.fin-exp { background: var(--red-bg); color: var(--red); }
+  .classify-tag.provision-exp { background: var(--orange-bg); color: var(--orange); border: 1px solid #fbbf24; }
+  .classify-tag.liab { background: var(--blue-bg); color: var(--blue); }
+
+  /* === SUMMARY === */
+  .summary-banner { background: linear-gradient(135deg, var(--navy) 0%, #1a3a50 100%); color: white; border-radius: 10px; padding: 1.5rem 1.6rem; margin-top: 0.8rem; }
+  .summary-banner h4 { font-family: 'Frank Ruhl Libre', serif; font-size: 1.05rem; color: var(--gold-lt); margin-bottom: 1rem; text-align: center; }
+  .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; text-align: center; }
+  @media (max-width: 700px) { .summary-grid { grid-template-columns: repeat(2, 1fr); } }
+  .sum-item { padding: 0.75rem 0.5rem; background: rgba(255,255,255,0.06); border-radius: 7px; border: 1px solid rgba(255,255,255,0.1); }
+  .sum-val { font-family: 'JetBrains Mono', monospace; font-size: 1.18rem; font-weight: 800; color: var(--gold-lt); direction: ltr; unicode-bidi: isolate; display: inline-block; }
+  .sum-label { font-size: 0.7rem; color: rgba(255,255,255,0.65); margin-top: 0.35rem; line-height: 1.4; }
+
+  /* === NOTES === */
+  .note { display: flex; align-items: flex-start; gap: 0.7rem; padding: 0.8rem 1rem; background: var(--teal-bg); border: 1px solid rgba(14,124,106,0.2); border-radius: 7px; margin: 0.9rem 0; font-size: 0.86rem; line-height: 1.75; }
+  .note.gold { background: var(--gold-bg); border-color: rgba(200,151,43,0.25); }
+  .note.blue { background: var(--blue-bg); border-color: rgba(29,78,216,0.2); }
+  .note.purple { background: var(--purple-bg); border-color: rgba(124,58,237,0.3); }
+  .note .ic { font-size: 1.05rem; flex-shrink: 0; line-height: 1.3; }
+  .note strong { color: var(--navy); }
+
+  /* === P&L TABLE === */
+  .pl-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.88rem; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .pl-table thead { background: var(--ink); color: var(--white); }
+  .pl-table th, .pl-table td { padding: 0.7rem 0.9rem; text-align: center; border-bottom: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .pl-table th { font-size: 0.78rem; font-weight: 600; }
+  .pl-table th:last-child, .pl-table td:last-child { border-left: none; }
+  .pl-table tbody tr:hover { background: var(--paper); }
+  .pl-table tbody tr.pl-total { background: var(--teal-bg); font-weight: 700; color: var(--teal); }
+  .pl-table tbody tr.pl-total td { border-top: 2px solid var(--teal); }
+  .pl-table .pl-year { font-weight: 700; color: var(--navy); text-align: right; padding-right: 1.2rem; }
+  .pl-table .purple-col { color: var(--purple); font-weight: 700; }
+
+  .sub-title { font-family: 'Frank Ruhl Libre', serif; font-size: 1.05rem; font-weight: 700; color: var(--navy); margin: 1.5rem 0 0.7rem; display: flex; align-items: center; gap: 0.5rem; }
+  .sub-title::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+  /* ===== COMPACT SOLUTION TABLE (bottom) ===== */
+  .compact-section {
+    background: var(--white);
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    margin-bottom: 1.6rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  }
+  .compact-header {
+    background: linear-gradient(135deg, #1a0533 0%, #2d0a5c 100%);
+    color: var(--white);
+    padding: 1rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    border-bottom: 3px solid var(--purple);
+  }
+  .compact-header h3 { font-family: 'Frank Ruhl Libre', serif; font-size: 1.18rem; font-weight: 700; color: #e9d5ff; }
+  .compact-header .h-sub { font-size: 0.78rem; color: rgba(255,255,255,0.6); font-weight: 300; margin-top: 0.15rem; }
+
+  .compact-table-wrap { overflow-x: auto; }
+  .compact-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 820px;
+  }
+  .compact-table thead tr { background: #1a0533; color: var(--white); }
+  .compact-table thead th { padding: 0.7rem 0.8rem; text-align: center; font-weight: 600; font-size: 0.75rem; border-left: 1px solid rgba(255,255,255,0.12); }
+  .compact-table thead th.col-desc { text-align: right; }
+  .compact-table thead th:last-child { border-left: none; }
+
+  .compact-table tbody td {
+    padding: 0.72rem 0.8rem;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    vertical-align: middle;
+  }
+  .compact-table tbody td:last-child { border-left: none; }
+  .compact-table .td-desc { text-align: right; font-size: 0.84rem; line-height: 1.5; }
+  .compact-table .td-date { font-weight: 700; color: var(--navy); white-space: nowrap; font-size: 0.83rem; }
+  .compact-table .td-balance { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.87rem; }
+  .compact-table .td-formula { direction: ltr; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--slate); white-space: nowrap; }
+  .compact-table .td-amount { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 0.9rem; }
+
+  /* row types */
+  .compact-table tr.ct-open { background: #fffbf0; }
+  .compact-table tr.ct-open td { color: #92400e; }
+  .compact-table tr.ct-open .td-balance { color: #d97706; }
+
+  .compact-table tr.ct-unwind td { background: var(--white); }
+  .compact-table tr.ct-unwind .td-amount { color: var(--blue); }
+  .compact-table tr.ct-unwind td.je-col { font-size: 0.79rem; color: var(--ink); }
+
+  .compact-table tr.ct-close { }
+  .compact-table tr.ct-close .td-balance { color: var(--teal); }
+
+  .compact-table tr.ct-rate { background: var(--purple-bg); }
+  .compact-table tr.ct-rate .td-amount { color: var(--purple); }
+  .compact-table tr.ct-rate td.je-col { font-size: 0.79rem; color: var(--purple); font-weight: 700; }
+  .compact-table tr.ct-rate .td-balance { color: var(--purple); }
+
+  .compact-table tr.ct-total { background: var(--navy); }
+  .compact-table tr.ct-total td { color: var(--white) !important; font-weight: 700; border-bottom: none; }
+  .compact-table tr.ct-total .td-balance { color: var(--gold-lt) !important; font-size: 1rem; }
+  .compact-table tr.ct-total .td-desc { text-align: right; padding-right: 1.2rem; }
+
+  .je-entry { font-size: 0.78rem; line-height: 1.6; text-align: right; }
+  .je-entry .je-dr { color: var(--navy); font-weight: 700; }
+  .je-entry .je-cr { color: var(--slate); padding-right: 0.8rem; display: block; }
+  .je-entry .je-dr-purple { color: var(--purple); font-weight: 700; }
+  .je-entry .je-cr-prov { color: var(--red); }
+
+  .section-divider {
+    height: 2px;
+    background: var(--line);
+    margin: 0.3rem 0;
+  }
+  .section-divider.strong {
+    background: linear-gradient(90deg, var(--purple) 0%, var(--teal) 100%);
+  }
+
+  /* year group header */
+  .compact-table tr.year-group td {
+    background: var(--ink);
+    color: rgba(255,255,255,0.8);
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-align: right;
+    padding: 0.4rem 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* note legend */
+  .legend-strip {
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    padding: 0.8rem 1.2rem;
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+    font-size: 0.78rem;
+    align-items: center;
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-badge">📘 IAS 37 — הפרשות, התחייבויות תלויות ונכסים תלויים</div>
+  <h1>פתרון מלא — <span>דוגמה 2.1</span></h1>
+  <div class="sub">תנועה בהפרשה מהוונת בשנים 2024–2025, הכוללת התאמה בעקבות שינוי שיעור היוון</div>
+  <div class="sub" style="margin-top:0.4rem; color:rgba(255,255,255,0.45); font-size:0.8rem;">בהנחיית ד"ר שי צבאן</div>
+</header>
+
+<div style="background:#1a2e40; padding:1rem 1.5rem; text-align:center; border-bottom:2px solid #2d4a5c;">
+  <a href="https://mypac-my.sharepoint.com/:x:/g/personal/shay_tsaban_pac_org_il/IQDfPntOJKmDTpyFdAeEVUKeAVOfM2RLpDX10Q89VL1h9o0?e=NhtyBV" target="_blank" style="display:inline-flex; align-items:center; gap:0.75rem; background:#1d6f42; color:#fff; text-decoration:none; padding:0.85rem 2rem; border-radius:8px; font-family:'Heebo',sans-serif; font-size:1.05rem; font-weight:700; border:2px solid #2ea86a; box-shadow:0 4px 14px rgba(29,111,66,0.4); transition:all 0.2s;">
+    <span style="font-size:1.5rem;">📊</span>
+    <span>לא אהבתם את הצגת הפתרון הנ"ל? פתרון רגיל באקסל זמין כאן — קליק וזה נפתח</span>
+    <span style="font-size:1.2rem;">↗</span>
+  </a>
+</div>
+
+<div class="container">
+
+  <!-- ===== PROMINENT CORRECTION BANNER ===== -->
+  <div class="correction-alert">
+    <div class="correction-alert-header">
+      <div class="correction-alert-icon">📌</div>
+      <div>
+        <h2>הבהרה לגבי סיווג <em>עדכון שיעור ההיוון</em></h2>
+        <div style="font-size:0.83rem; color:#a5b4fc; margin-top:0.3rem;">סכום ₪455.68</div>
+      </div>
+    </div>
+
+    <div style="margin: 0.8rem 0;">
+      <div class="compare-box right" style="max-width:480px;">
+        <div class="cb-label">✅ סיווג נכון — לפי IAS 37</div>
+        <p><strong>ח. הפסד (הוצאות הפרשה)</strong> / ז. הפרשה</p>
+        <p style="margin-top:0.5rem;">שינוי שיעור היוון = שינוי אומדן בהפרשה עצמה → אותו קו P&L כמו ההפרשה המקורית.</p>
+      </div>
+    </div>
+
+    <div class="correction-norm">
+      <p>
+        <strong>בסיס נורמטיבי — IAS 37 §59:</strong>
+        <span class="ias-ref">IAS 37 §59</span>
+        הסעיף קובע <em>במפורש</em> ש"גידול בהפרשה המשקף חלוף הזמן" הוא הוצאות מימון (Borrowing Cost) — ולא יותר מזה.
+        שינוי <strong>שיעור ההיוון</strong> אינו "חלוף זמן" — זהו שינוי באומדן שיעור הריבית המשמש לחישוב הערך הנוכחי.
+      </p>
+      <p style="margin-top:0.6rem;">
+        <strong>IAS 37 §45 + §47:</strong>
+        <span class="ias-ref">§45</span><span class="ias-ref">§47</span>
+        שיעור ההיוון הוא חלק מהאומדן הטוב ביותר של ההפרשה (Best Estimate). שינויו הוא שינוי אומדן חשבונאי לפי
+        <span class="ias-ref">IAS 8 §36</span> — מטופל <strong>פרוספקטיבית</strong> ובאותו קו P&L של ההפרשה המקורית
+        (תפעולי / הפסד מהפרשה), <em>לא</em> כמימון.
+      </p>
+      <p style="margin-top:0.6rem;">
+        <strong>לסיכום:</strong> רק ה"גידול האוטומטי" בשל מעבר הזמן (Unwinding) = מימון.
+        כל שינוי בפרמטרים של ההפרשה — סכום, הסתברות, שיעור היוון — = הוצאת הפרשה (תפעולית / הפסד).
+      </p>
+    </div>
+  </div>
+
+  <!-- =================== QUESTION =================== -->
+  <div class="question-box">
+    <div class="qb-label">📋 נוסח השאלה</div>
+    <div class="q-title">דוגמה מספר 2.1</div>
+    <p>ביום <span class="date">31/12/2023</span> הישות צריכה להכיר בהפרשה בגין תשלום חזוי בסך <strong>100,000 ש"ח</strong>.</p>
+    <p>הישות מעריכה שהתשלום יתבצע ביום <span class="date">31/12/2026</span>.</p>
+    <p>עד ליום <span class="date">31/12/2025</span> שיעור ההיוון הנומינלי הינו <strong>5%</strong>.</p>
+    <p>ביום <span class="date">31/12/2025</span> שיעור ההיוון הנומינלי הינו <strong>4.5%</strong>.</p>
+    <div class="req">
+      <strong>נדרש:</strong> תנועה בהפרשה בשנים 2024 ו-2025.
+    </div>
+  </div>
+
+  <!-- =================== SECTION 1 =================== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div>
+        <h3>הכרה ראשונית בהפרשה — <span class="date" style="color:var(--gold-lt);">31/12/2023</span></h3>
+        <div class="h-sub">חישוב הערך הנוכחי (PV) של התשלום החזוי</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="facts-grid">
+        <div class="fact-card">
+          <div class="fact-card-label">סכום נומינלי לתשלום</div>
+          <div class="fact-card-value"><span class="num">100,000</span> ש"ח</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-card-label">תקופת היוון</div>
+          <div class="fact-card-value"><span class="num">3</span> שנים</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-card-label">שיעור היוון בעת ההכרה</div>
+          <div class="fact-card-value"><span class="num">5%</span> נומינלי</div>
+        </div>
+      </div>
+      <div class="calc-box">
+        <div class="calc-step-label">⚙️ חישוב הערך הנוכחי</div>
+        <div class="calc-formula"><span class="fn">=PV</span>(5%, 3, 0, -100000)  →  <span class="res">86,383.76</span></div>
+        <div class="calc-formula">= 100000 / (1.05)^3  =  100000 / 1.157625  →  <span class="res">86,383.76</span></div>
+      </div>
+      <div class="je-title">📓 פקודת יומן — הכרה ראשונית ביום <span class="date">31/12/2023</span></div>
+      <div class="je">
+        <table class="je-table">
+          <thead><tr><th>חשבון</th><th>חובה (ש"ח)</th><th>זכות (ש"ח)</th></tr></thead>
+          <tbody>
+            <tr><td class="je-debit">הוצאה (לפי טבע ההפרשה)</td><td class="je-amt-d"><span class="num">86,383.76</span></td><td>—</td></tr>
+            <tr><td class="je-credit">הפרשה <span style="color:var(--blue); font-size:0.78rem;">(התחייבות לא שוטפת)</span></td><td>—</td><td class="je-amt-c"><span class="num">86,383.76</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== SECTION 2 =================== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div>
+        <h3>טבלת התנועה בהפרשה — שנים 2024 ו-2025</h3>
+        <div class="h-sub">שורה 3 (בסגול) — עדכון שיעור ההיוון: מסווג כהפסד (הוצאות הפרשה) — לא כמימון!</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="move-table-wrap">
+        <table class="move-table">
+          <thead>
+            <tr>
+              <th style="width:48px;">#</th>
+              <th style="width:100px;">תאריך</th>
+              <th style="width:130px;">יתרת פתיחה</th>
+              <th>מהות התנועה</th>
+              <th style="width:130px;">סכום התנועה</th>
+              <th style="width:130px;">יתרת סגירה</th>
+              <th style="width:96px;">פירוט</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- ROW 1: 2024 unwinding -->
+            <tr>
+              <td><strong>1</strong></td>
+              <td><span class="date">31/12/2024</span></td>
+              <td class="opening"><span class="num">86,383.76</span></td>
+              <td class="nature">
+                <span class="nature-tag unwind">הפרשי היוון</span>
+                גידול בשל חלוף הזמן (ריבית 5%) — <span class="classify-tag fin-exp">הוצאות מימון</span>
+              </td>
+              <td class="amount-pos"><span class="num">+4,319.19</span></td>
+              <td class="closing"><span class="num">90,702.95</span></td>
+              <td><button class="explain-btn" onclick="toggleRow(this,'d1')"><span class="lbl">הסבר</span><span class="chev">▾</span></button></td>
+            </tr>
+            <tr id="d1" class="row-detail"><td colspan="7">
+              <div class="detail-grid">
+                <div class="detail-block">
+                  <h4><span class="icon">⚙</span>חישוב מספרי</h4>
+                  <div class="calc-formula">= 86383.76 * 5%  →  <span class="res">4,319.19</span></div>
+                  <div class="calc-formula"><span class="fn">=PV</span>(5%, 2, 0, -100000)  →  <span class="res">90,702.95</span> ✓</div>
+                </div>
+                <div class="detail-block">
+                  <h4><span class="icon">📚</span>סיווג</h4>
+                  <p><strong>שם התנועה:</strong> הפרשי היוון — חלוף הזמן.</p>
+                  <p><strong>IAS 37 §59:</strong> גידול הנובע מחלוף הזמן = <span class="classify-tag fin-exp">הוצאות מימון</span>.</p>
+                  <p><strong>מאזן:</strong> <span class="classify-tag liab">התחייבות לא שוטפת</span> — התשלום בעוד שנתיים.</p>
+                </div>
+              </div>
+              <div class="je-title">📓 פקודת יומן ליום <span class="date">31/12/2024</span></div>
+              <div class="je">
+                <table class="je-table">
+                  <thead><tr><th>חשבון</th><th>חובה (ש"ח)</th><th>זכות (ש"ח)</th></tr></thead>
+                  <tbody>
+                    <tr><td class="je-debit">הוצאות מימון <span style="font-size:0.78rem; color:var(--slate);">(הפרשי היוון — חלוף הזמן)</span></td><td class="je-amt-d"><span class="num">4,319.19</span></td><td>—</td></tr>
+                    <tr><td class="je-credit">הפרשה <span style="color:var(--blue); font-size:0.78rem;">(התחייבות לא שוטפת)</span></td><td>—</td><td class="je-amt-c"><span class="num">4,319.19</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </td></tr>
+
+            <!-- ROW 2: 2025 unwinding -->
+            <tr>
+              <td><strong>2</strong></td>
+              <td><span class="date">31/12/2025</span></td>
+              <td class="opening"><span class="num">90,702.95</span></td>
+              <td class="nature">
+                <span class="nature-tag unwind">הפרשי היוון</span>
+                גידול בשל חלוף הזמן בשנת 2025 (ריבית 5% — השיעור ששרר במהלך השנה) — <span class="classify-tag fin-exp">הוצאות מימון</span>
+              </td>
+              <td class="amount-pos"><span class="num">+4,535.15</span></td>
+              <td class="closing"><span class="num">95,238.10</span></td>
+              <td><button class="explain-btn" onclick="toggleRow(this,'d2')"><span class="lbl">הסבר</span><span class="chev">▾</span></button></td>
+            </tr>
+            <tr id="d2" class="row-detail"><td colspan="7">
+              <div class="detail-grid">
+                <div class="detail-block">
+                  <h4><span class="icon">⚙</span>חישוב מספרי</h4>
+                  <div class="calc-formula">= 90702.95 * 5%  →  <span class="res">4,535.15</span></div>
+                  <div class="calc-formula">= 100000 / 1.05  →  <span class="res">95,238.10</span> ✓ <span class="com">// PV ב-5% לשנה</span></div>
+                </div>
+                <div class="detail-block">
+                  <h4><span class="icon">📚</span>סיווג</h4>
+                  <p><strong>IAS 37 §59:</strong> גידול בשל חלוף הזמן = <span class="classify-tag fin-exp">הוצאות מימון</span>.</p>
+                  <p><strong>הבחנה:</strong> שינוי השיעור מ-5% ל-4.5% נרשם בשורה נפרדת (שורה 3) — לאחר הפרשי ההיוון.</p>
+                  <p><strong>מאזן:</strong> ההפרשה הופכת ל<span class="classify-tag liab">התחייבות שוטפת</span> (תשלום בעוד שנה).</p>
+                </div>
+              </div>
+              <div class="je-title">📓 פקודת יומן ליום <span class="date">31/12/2025</span> (תנועה 1 — הפרשי היוון)</div>
+              <div class="je">
+                <table class="je-table">
+                  <thead><tr><th>חשבון</th><th>חובה (ש"ח)</th><th>זכות (ש"ח)</th></tr></thead>
+                  <tbody>
+                    <tr><td class="je-debit">הוצאות מימון <span style="font-size:0.78rem; color:var(--slate);">(הפרשי היוון — חלוף הזמן)</span></td><td class="je-amt-d"><span class="num">4,535.15</span></td><td>—</td></tr>
+                    <tr><td class="je-credit">הפרשה <span style="color:var(--blue); font-size:0.78rem;">(התחייבות)</span></td><td>—</td><td class="je-amt-c"><span class="num">4,535.15</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </td></tr>
+
+            <!-- ROW 3: rate change — highlighted purple -->
+            <tr class="rate-row">
+              <td><strong>3</strong></td>
+              <td><span class="date">31/12/2025</span></td>
+              <td class="opening"><span class="num">95,238.10</span></td>
+              <td class="nature" style="background: var(--purple-bg);">
+                <span class="nature-tag rate">⚠ עדכון שיעור היוון</span>
+                ירידת שיעור מ-5% ל-4.5% — <strong style="color:var(--purple);">שינוי אומדן בהפרשה</strong> — <span class="classify-tag provision-exp">הפסד (הוצאות הפרשה)</span>
+                <div style="font-size:0.74rem; color:var(--purple); margin-top:0.3rem; font-weight:700;">⚠ לא הוצאות מימון! — ראה IAS 37 §59 + §47</div>
+              </td>
+              <td class="amount-pos"><span class="num">+455.68</span></td>
+              <td class="closing"><span class="num">95,693.78</span></td>
+              <td><button class="explain-btn purple-btn" onclick="toggleRow(this,'d3')"><span class="lbl">הסבר</span><span class="chev">▾</span></button></td>
+            </tr>
+            <tr id="d3" class="row-detail purple-detail"><td colspan="7">
+
+              <div class="key-insight">
+                <p><strong>מדוע זה <em>לא</em> הוצאות מימון?</strong></p>
+                <p>
+                  <span class="ias-badge">IAS 37 §59</span>
+                  קובע: "גידול בהפרשה <em>המשקף חלוף הזמן</em> (passage of time) יוכר כהוצאות מימון."
+                  <br>שינוי שיעור ההיוון <strong>אינו</strong> "חלוף הזמן" — זוהי עדכון פרמטר של האומדן.
+                </p>
+                <p style="margin-top:0.5rem;">
+                  <span class="ias-badge">IAS 37 §47</span>
+                  שיעור ההיוון הוא חלק מהאומדן הטוב ביותר (Best Estimate) של ההפרשה.
+                  <span class="ias-badge">IAS 8 §36</span>
+                  שינוי אומדן חשבונאי מוכר פרוספקטיבית <strong>באותו קו P&L</strong> כמו האומדן המקורי.
+                  <br>→ ההפרשה המקורית נזקפה לחובת הוצאה תפעולית / הפסד → גם עדכון השיעור ייזקף לאותו קו.
+                </p>
+              </div>
+
+              <div class="detail-grid">
+                <div class="detail-block">
+                  <h4><span class="icon purple">⚙</span><span class="purple">חישוב מספרי — שני שלבים</span></h4>
+                  <div class="calc-formula purple">
+                    <span class="com">// שלב א': PV חדש לפי שיעור 4.5%</span>
+                  </div>
+                  <div class="calc-formula purple">
+                    = 100000 / (1.045)^1  →  <span class="res">95,693.78</span>
+                  </div>
+                  <div class="calc-formula purple">
+                    <span class="com">// שלב ב': סכום ההתאמה</span>
+                  </div>
+                  <div class="calc-formula purple">
+                    = 95693.78 - 95238.10  →  <span class="res">455.68</span>
+                  </div>
+                  <p class="calc-explanation">ירידה בשיעור = הנוסחה מהוונת פחות חזק = הערך הנוכחי <strong>עולה</strong> → ההפרשה גדלה → <strong>הפסד</strong>.</p>
+                </div>
+                <div class="detail-block">
+                  <h4><span class="icon purple">📚</span><span class="purple">סיווג נכון לפי IAS 37</span></h4>
+                  <p><strong>שם התנועה:</strong> "עדכון הפרשה בשל שינוי שיעור היוון".</p>
+                  <p><strong>P&L:</strong> <span class="classify-tag provision-exp">הפסד — הוצאות הפרשה</span> — <em>אותו קו</em> כמו ההפרשה המקורית.</p>
+                  <p><strong>אילו שיעור עלה:</strong> הייתה נרשמת הכנסה / רווח מהפרשה (ירידה ביתרת ההפרשה), באותו קו תפעולי.</p>
+                  <p><strong>IAS 8:</strong> שינוי אומדן — טיפול פרוספקטיבי בלבד, אין השפעה על שנים קודמות.</p>
+                </div>
+              </div>
+
+              <div class="je-title">📓 פקודת יומן ליום <span class="date">31/12/2025</span> (תנועה 2 — עדכון שיעור היוון)</div>
+              <div class="je purple">
+                <table class="je-table">
+                  <thead><tr><th>חשבון</th><th>חובה (ש"ח)</th><th>זכות (ש"ח)</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td class="je-debit" style="color:var(--purple);">הפסד — הוצאות הפרשה <span style="font-size:0.78rem; font-weight:400; color:var(--slate);">(עדכון שיעור היוון — שינוי אומדן)</span></td>
+                      <td><span class="num" style="color:var(--purple); font-weight:800;">455.68</span></td>
+                      <td>—</td>
+                    </tr>
+                    <tr>
+                      <td class="je-credit">הפרשה <span style="color:var(--blue); font-size:0.78rem;">(התחייבות)</span></td>
+                      <td>—</td>
+                      <td class="je-amt-c"><span class="num">455.68</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="note purple" style="margin-top:0.9rem;">
+                <span class="ic">📝</span>
+                <div>
+                  <strong>השוואה לחלופה הלא-נכונה שהוצגה בשיעור:</strong>
+                  בשיעור נרשמה הפקודה ח. <em>הוצאות מימון</em> / ז. הפרשה — זה שגוי כי IAS 37 §59 מגביל את "הוצאות המימון" לגידול הנובע מחלוף הזמן בלבד, ולא משינוי שיעור ההיוון.
+                </div>
+              </div>
+            </td></tr>
+
+            <!-- TOTAL -->
+            <tr class="total-row">
+              <td colspan="4" style="text-align:right; padding-right:1.2rem;">סה"כ תנועות 2024–2025 (גידול ההפרשה)</td>
+              <td><span class="num">+9,310.02</span></td>
+              <td><span class="num">95,693.78</span></td>
+              <td>—</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note blue" style="margin-top:1rem;">
+        <span class="ic">🔎</span>
+        <div>
+          <strong>קריאה נכונה:</strong> שורות 2 ו-3 מתרחשות באותו תאריך (31/12/2025). תחילה רושמים הפרשי היוון (חלוף הזמן @5%) → זכות הוצאות מימון. לאחר מכן רושמים התאמת שיעור → זכות <strong>הפסד/הוצאות הפרשה</strong>.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =================== SECTION 3 =================== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div>
+        <h3>סיכום ההשפעה על הדוחות הכספיים</h3>
+        <div class="h-sub">יתרות סוף שנה במאזן | הוצאות מימון + הפסד מהפרשה בדוח רווח והפסד</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="summary-banner">
+        <h4>📊 יתרות ההפרשה בסוף כל תקופה</h4>
+        <div class="summary-grid">
+          <div class="sum-item"><div class="sum-val">86,383.76</div><div class="sum-label">31/12/2023<br>(הכרה ראשונית)</div></div>
+          <div class="sum-item"><div class="sum-val">90,702.95</div><div class="sum-label">31/12/2024<br>(שנה ראשונה)</div></div>
+          <div class="sum-item"><div class="sum-val">95,693.78</div><div class="sum-label">31/12/2025<br>(שנה שנייה + עדכון שיעור)</div></div>
+          <div class="sum-item"><div class="sum-val">100,000.00</div><div class="sum-label">31/12/2026<br>(מחוץ לתחום)</div></div>
+        </div>
+      </div>
+
+      <div class="sub-title">פירוט P&L — הפרדה בין הוצאות מימון להפסד מהפרשה</div>
+
+      <table class="pl-table">
+        <thead>
+          <tr>
+            <th>שנה</th>
+            <th>הוצאות מימון<br><small>(הפרשי היוון — חלוף הזמן)</small></th>
+            <th style="background:#2d0a5c;">הפסד — הוצאות הפרשה<br><small>(עדכון שיעור היוון)</small></th>
+            <th>סה"כ השפעה על P&L</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="pl-year">2024</td>
+            <td><span class="num">4,319.19</span></td>
+            <td class="purple-col">—</td>
+            <td><span class="num">4,319.19</span></td>
+          </tr>
+          <tr>
+            <td class="pl-year">2025</td>
+            <td><span class="num">4,535.15</span></td>
+            <td class="purple-col"><span class="num">455.68</span></td>
+            <td><span class="num">4,990.83</span></td>
+          </tr>
+          <tr class="pl-total">
+            <td class="pl-year" style="color:var(--teal);">סה"כ 2024–2025</td>
+            <td><span class="num">8,854.34</span></td>
+            <td><span class="num" style="color:var(--purple);">455.68</span></td>
+            <td><span class="num">9,310.02</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        <span class="ic">✅</span>
+        <div>
+          <strong>בדיקת סגירה:</strong> סה"כ P&L (<span class="num">9,310.02</span>) = יתרה 31/12/2025 (<span class="num">95,693.78</span>) פחות יתרה 31/12/2023 (<span class="num">86,383.76</span>). ✓
+        </div>
+      </div>
+
+      <div class="note gold">
+        <span class="ic">💼</span>
+        <div>
+          <strong>2026:</strong> הפרשי היוון נוספים <span class="num">4,306.22</span> ש"ח (95,693.78 × 4.5%) יביאו את ההפרשה ל-100,000 ש"ח. בתשלום בפועל: ח. הפרשה / ז. מזומן 100,000.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =================== COMPACT SOLUTION TABLE =================== -->
+  <div class="compact-section">
+    <div class="compact-header">
+      <div class="section-num" style="background:var(--purple);">✦</div>
+      <div>
+        <h3>פתרון מתומצת — תנועה בהפרשה 2024–2025</h3>
+        <div class="h-sub">מבנה כפי שיופיע בפתרון הסטנדרטי | שורת עדכון שיעור מודגשת בסגול</div>
+      </div>
+    </div>
+
+    <div class="compact-table-wrap">
+      <table class="compact-table">
+        <thead>
+          <tr>
+            <th class="col-desc" style="width:22%; text-align:right; padding-right:1rem;">תאריך / אירוע</th>
+            <th style="width:24%;">חישוב / נוסחה</th>
+            <th style="width:12%;">סכום (ש"ח)</th>
+            <th style="width:18%;">פקודת יומן</th>
+            <th style="width:12%;">יתרת הפרשה</th>
+            <th style="width:12%;">קו P&L</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- Opening balance -->
+          <tr class="ct-open">
+            <td class="td-desc"><strong>31/12/2023</strong><br>הכרה ראשונית</td>
+            <td class="td-formula">100,000 / (1.05)³</td>
+            <td class="td-amount" style="color:var(--gold);">(86,384)</td>
+            <td class="je-entry">
+              <span class="je-dr">ח. הפסד (הוצאות הפרשה)</span>
+              <span class="je-cr">ז. הפרשה</span>
+            </td>
+            <td class="td-balance">86,384</td>
+            <td style="font-size:0.75rem; color:var(--orange); font-weight:700;">תפעולי</td>
+          </tr>
+
+          <!-- 2024 divider -->
+          <tr class="year-group"><td colspan="6">שנת 2024</td></tr>
+
+          <!-- 2024 unwinding -->
+          <tr class="ct-unwind">
+            <td class="td-desc">
+              <span class="td-date">31/12/2024</span><br>
+              הוצי מימון — חלוף הזמן
+            </td>
+            <td class="td-formula">5% × 86,384</td>
+            <td class="td-amount" style="color:var(--blue);">(4,319)</td>
+            <td class="je-entry">
+              <span class="je-dr">ח. הוצי מימון</span>
+              <span class="je-cr">ז. הפרשה</span>
+            </td>
+            <td class="td-balance" style="color:var(--teal);">90,703</td>
+            <td style="font-size:0.75rem; color:var(--red); font-weight:700;">מימון</td>
+          </tr>
+
+          <!-- 2025 divider -->
+          <tr class="year-group"><td colspan="6">שנת 2025</td></tr>
+
+          <!-- 2025 unwinding -->
+          <tr class="ct-unwind">
+            <td class="td-desc">
+              <span class="td-date">31/12/2025</span><br>
+              הוצי מימון — חלוף הזמן
+            </td>
+            <td class="td-formula">5% × 90,703</td>
+            <td class="td-amount" style="color:var(--blue);">(4,535)</td>
+            <td class="je-entry">
+              <span class="je-dr">ח. הוצי מימון</span>
+              <span class="je-cr">ז. הפרשה</span>
+            </td>
+            <td class="td-balance" style="color:var(--slate);">95,238</td>
+            <td style="font-size:0.75rem; color:var(--red); font-weight:700;">מימון</td>
+          </tr>
+
+          <!-- 2025 rate change — highlighted! -->
+          <tr class="ct-rate">
+            <td class="td-desc">
+              <span class="td-date" style="color:var(--purple);">31/12/2025</span><br>
+              <span style="color:var(--purple); font-weight:800;">עדכון שיעור ← 4.5%</span>
+              <div style="font-size:0.73rem; color:var(--purple); margin-top:0.2rem;">⚠ הפסד — לא מימון!</div>
+            </td>
+            <td class="td-formula" style="color:var(--purple);">
+              100,000/1.045 = 95,694<br>
+              95,694 − 95,238 = 456
+            </td>
+            <td class="td-amount">(456)</td>
+            <td class="je-entry">
+              <span class="je-dr-purple">ח. הפסד (הוצ' הפרשה)</span>
+              <span class="je-cr je-cr-prov">ז. הפרשה</span>
+            </td>
+            <td class="td-balance">95,694</td>
+            <td style="font-size:0.75rem; color:var(--purple); font-weight:800;">תפעולי<br>⚠</td>
+          </tr>
+
+          <!-- Total -->
+          <tr class="ct-total">
+            <td class="td-desc" colspan="2">סה"כ תנועה בהפרשה 2024–2025</td>
+            <td class="td-amount" style="color:var(--gold-lt);">(9,310)</td>
+            <td>—</td>
+            <td class="td-balance">95,694</td>
+            <td>—</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="legend-strip">
+      <strong style="font-size:0.8rem;">מקרא:</strong>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--blue);"></div><span>הוצאות מימון — חלוף הזמן (IAS 37 §59)</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--purple);"></div><span>הפסד / הוצאות הפרשה — עדכון שיעור היוון (IAS 37 §47 + IAS 8 §36) ⚠</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--gold);"></div><span>הוצאות הפרשה מקורית (תפעולי)</span></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggleRow(btn, id) {
+    const row = document.getElementById(id);
+    if (!row) return;
+    const lbl = btn.querySelector('.lbl');
+    const isOpen = row.classList.contains('show');
+    if (isOpen) {
+      row.classList.remove('show');
+      btn.classList.remove('open');
+      lbl.textContent = 'הסבר';
+    } else {
+      row.classList.add('show');
+      btn.classList.add('open');
+      lbl.textContent = 'סגור';
+    }
+  }
+</script>
+
+</body>
+</html>
